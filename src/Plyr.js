@@ -1,7 +1,7 @@
 Ext.define('Ext.plyr.Plyr', 
 {
     extend: 'Ext.Component',
-    xtype: 'plyrext',
+    xtype: 'plyr',
 	
 	player: null,
     plyrInitialized: false,
