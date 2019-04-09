@@ -4,10 +4,19 @@ Ext.define('Ext.plyr.Plyr',
     xtype: 'plyr',
 	
 	player: null,
+	playerId: null,
     plyrInitialized: false,
     intializationInProgress: 0,
+    reference: 'player',
+    autoHeight: true,
+    border:false,
+    style: 
+    {
+    	padding: '0 0 0 0',
+    	border: '0'
+    },
 
-    plyrOnLoaded: Ext.emptyFn,
+	plyrOnLoaded: Ext.emptyFn,
 	plyrLog: Ext.emptyFn,
 
     statics:
@@ -21,16 +30,6 @@ Ext.define('Ext.plyr.Plyr',
     		scope: null
     	}
     },
-
-    autoHeight: true,
-    border:false,
-    style: 
-    {
-    	padding: '0 0 0 0',
-    	border: '0'
-    },
-
-	reference: 'player',
 
     config:
     {
@@ -51,7 +50,9 @@ Ext.define('Ext.plyr.Plyr',
 
     getIdRoot: function()
     {
-		this.idRoot = Ext.plyr.Plyr.playerIdCounter;
+		if (this.idRoot === 0) {
+			this.idRoot = ++Ext.plyr.Plyr.playerIdCounter;
+		}
         return this.idRoot;
 	},
 	
@@ -79,14 +80,20 @@ Ext.define('Ext.plyr.Plyr',
     	var me = this;
     	me.callParent(arguments);
 
-		me.plyrLog("", 1);
-		
+		if (me.plyrLog) {
+			me.plyrLog("", 1);
+		}
+
 		if (Ext.isIE) {
-			me.plyrLog("HTML5 audio is not supported in IE.  Fall back to apple/qtplugin", 1);
+			if (me.plyrLog) {
+				me.plyrLog("HTML5 audio is not supported in IE.  Fall back to apple/qtplugin", 1);
+			}
 			return;
 		}
 
-		me.plyrLog("Loading Plyr HTML5 Media", 1);
+		if (me.plyrLog) {
+			me.plyrLog("Loading Plyr HTML5 Media", 1);
+		}
 
     	//
     	// Load script
@@ -119,10 +126,12 @@ Ext.define('Ext.plyr.Plyr',
     onLoadError: function() 
     {
 		var me = this;
-		if (!Ext.plyr.Plyr.sriptLoaded)
-			me.plyrLog("   Error loading JS", 1);
-		else if (Ext.plyr.Plyr.sriptLoaded === 1)
-			me.plyrLog("   Error loading CSS", 1);
+		if (me.plyrLog) {
+			if (!Ext.plyr.Plyr.sriptLoaded)
+				me.plyrLog("   Error loading JS", 1);
+			else if (Ext.plyr.Plyr.sriptLoaded === 1)
+				me.plyrLog("   Error loading CSS", 1);
+		}
     },
 
 
@@ -134,7 +143,9 @@ Ext.define('Ext.plyr.Plyr',
     	var me = this;
 		if (!Ext.plyr.Plyr.sriptLoaded) 
 		{
-			me.plyrLog("   JS loaded", 1);
+			if (me.plyrLog) {
+				me.plyrLog("   JS loaded", 1);
+			}
 			//
 			// Load the CSS
 			//
@@ -156,13 +167,31 @@ Ext.define('Ext.plyr.Plyr',
 			//
 			// JS and CSS both loaded, initialize the plyr component
 			//
-			me.plyrLog("   CSS loaded", 1);
+			me.playerId = '#player_' + me.getIdRoot();
+			if (me.plyrLog) {
+				me.plyrLog("   CSS loaded", 1);
+			}
 			Ext.plyr.Plyr.sriptLoaded = true;
-			me.player = new Plyr('#player_' + Ext.plyr.Plyr.playerIdCounter);
-			Ext.plyr.Plyr.playerIdCounter++;
-			me.plyrLog("    Player initialized", 1);
-
-			//console.log(me.player);
+			me.player = new Plyr(me.playerId);
+			if (me.plyrLog) {
+				me.plyrLog("    Player initialized", 1);
+			}
+			if (me.plyrOnLoaded) {
+				if (me.plyrOnLoaded instanceof Function) {
+					me.plyrOnLoaded(me.playerId, me.player);
+				}
+				else if (me.plyrOnLoaded instanceof Object)
+				{
+					if (me.plyrOnLoaded.fn) {
+						if (me.plyrOnLoaded.scope) {
+							Ext.Function.pass(me.plyrOnLoaded.fn, [ me.playerId, me.player ], me.plyrOnLoaded.scope)();
+						}
+						else {
+							me.plyrOnLoaded.fn(me.playerId, me.player);
+						}
+					}
+				}
+			}
     	}
 	}
 });
