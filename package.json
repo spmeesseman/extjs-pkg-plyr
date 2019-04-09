@@ -57,7 +57,7 @@
 		},
 		"resources": [
 			{
-				"path": "${package.dir}/node_modules/plyr/dist",
+				"path": "${package.dir}/../plyr/dist",
 				"output": "base"
 			}
 		],
