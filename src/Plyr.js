@@ -80,6 +80,12 @@ Ext.define('Ext.plyr.Plyr',
     	me.callParent(arguments);
 
 		me.plyrLog("", 1);
+		
+		if (Ext.isIE) {
+			me.plyrLog("HTML5 audio is not supported in IE.  Fall back to apple/qtplugin", 1);
+			return;
+		}
+
 		me.plyrLog("Loading Plyr HTML5 Media", 1);
 
     	//
