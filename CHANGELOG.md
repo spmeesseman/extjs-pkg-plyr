@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.3](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.2...v1.0.3) (2019-04-09)
+
+
+### Bug Fixes
+
+* fall back to apple/qtplugin player for IE ([31f2894](https://github.com/spmeesseman/extjs-pkg-plyr/commit/31f2894))
+
+
+### Documentation
+
+* **readme:** update example ([df2b04a](https://github.com/spmeesseman/extjs-pkg-plyr/commit/df2b04a))
+
 ## [1.0.2](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.1...v1.0.2) (2019-04-09)
 
 
