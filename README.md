@@ -36,7 +36,18 @@ Simply include the control into any class file:
     require: [ 'Ext.plyr.Plyr' ],
     items: [
     {
-        xtype: 'plyr'
+        xtype: 'plyr',
+        audioCtlListTags: 'download',
+        currentTime: 0,
+        url: 'https://www.mydomain.com/audio/blank.mp4',
+        plyrLoaded: function()         // Optional callback
+        {
+            Utils.log('Loaded!!!');
+        },
+        plyrLog: function(msg, level)  // Optional callback
+        {
+            Utils.log(msg, level);
+        }
     }]
 
 ## Feedback & Contributing
