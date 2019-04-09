@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.4](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.3...v1.0.4) (2019-04-09)
+
+
+### Bug Fixes
+
+* remove unnecessary workspace file ([063590c](https://github.com/spmeesseman/extjs-pkg-plyr/commit/063590c))
+
 ## [1.0.3](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.2...v1.0.3) (2019-04-09)
 
 
