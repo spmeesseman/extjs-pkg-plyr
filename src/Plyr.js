@@ -1,51 +1,20 @@
-
 Ext.define('Ext.plyr.Plyr', 
 {
-    extend: 'Ext.Container',
-    xtype: 'plyr',
+    extend: 'Ext.Component',
+    xtype: 'plyrext',
 	
 	player: null,
+    plyrInitialized: false,
+    intializationInProgress: 0,
 
-    /*
-    Flag for tracking the initialization state
-     */
-    wysiwygIntialized: false,
-    intializationInProgress: false,
+    plyrOnLoaded: Ext.emptyFn,
+	plyrLog: Ext.emptyFn,
 
-    lastHeight: null,
-    lastFrameHeight: null,
-
-    /*
-    In the ExtJS 5.x, the liquid layout is used if possible. 
-    The liquid layout means that the component is rendered
-    with the help of pure CSS without any JavaScript. In this 
-    case, no sizing events are fired.
-
-    However, the event 'resize' is essential for the 
-    Ext.ux.form.TinyMCETextArea. For that reason, we set 
-    liquidLayout to false.
-     */
-    liquidLayout: false,
-
-    //
-    // 
-    //
-    editorLoaded: Ext.emptyFn,
-
-    privates:
-    {
-    	//editorLoadingMask: false,
-    	initialValue: null,
-    	initialValueSet: false
-    },
-
-    //
-    // Custom static properties
-    //
     statics:
     {
     	imgPath: 'resources/images',
-    	scriptLoaded: false,
+		scriptLoaded: 0,
+		playerIdCounter: 0,
     	captureActivity: 
     	{
     		fn: Ext.emptyFn,
@@ -61,20 +30,65 @@ Ext.define('Ext.plyr.Plyr',
     	border: '0'
     },
 
-    afterRender: function () 
+	reference: 'player',
+
+    config:
+    {
+        url: '',
+        idRoot: 0,
+        audioCtlListTags: '',
+        currentTime: 0,
+        playbackSpeed: 1
+    },
+
+    publishes:
+    {
+        url: true,
+        idRoot: true,
+        audioCtlListTags: true,
+        currentTime: true
+    },
+
+    getIdRoot: function()
+    {
+		this.idRoot = Ext.plyr.Plyr.playerIdCounter;
+        return this.idRoot;
+	},
+	
+	bind:
+    {
+        html: !Ext.isIE ? 
+        //
+        // Non-IE
+        //
+        '<audio id="player_{player.idRoot}" src="{player.url}" controls controlsList="{player.audioCtlListTags}" ' +
+        'currenttime="{player.currentTime}" style="width:100%">This browser does not support HTML 5.</audio>' : 
+        //
+        // IE does not support HTML5 Audio Player
+        //
+        '<object id="player_{player.idRoot}" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
+            'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
+            '<param name="src" value="{player.url}">' +
+            '<param name="autoplay" value="false">' +
+            '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
+        '</object>'
+	},
+	
+    afterRender: function() 
     {
     	var me = this;
     	me.callParent(arguments);
 
+		me.plyrLog("", 1);
+		me.plyrLog("Loading Plyr HTML5 Media", 1);
+
     	//
     	// Load script
     	//
-    	if (!Ext.tinymce.TinyMceEditor.sriptLoaded)
+    	if (!Ext.plyr.Plyr.sriptLoaded)
     	{
     		new Ext.util.DelayedTask(function()
     		{
-    			//me.editorLoadingMask = ToolkitUtils.mask(me, 'Loading editor...');
-
     			Ext.Loader.loadScript(
     			{
     				url: Ext.manifest.resources.base + '/plyr/plyr.js',
@@ -84,7 +98,7 @@ Ext.define('Ext.plyr.Plyr',
     				scope: me
     			});
 
-    		}, me).delay(500);
+    		}, me).delay(5);
     	}
     	else
     	{
@@ -98,7 +112,11 @@ Ext.define('Ext.plyr.Plyr',
     //
     onLoadError: function() 
     {
-    	Utils.logError("There was an error loading the TinyMCE script");
+		var me = this;
+		if (!Ext.plyr.Plyr.sriptLoaded)
+			me.plyrLog("   Error loading JS", 1);
+		else if (Ext.plyr.Plyr.sriptLoaded === 1)
+			me.plyrLog("   Error loading CSS", 1);
     },
 
 
@@ -108,170 +126,37 @@ Ext.define('Ext.plyr.Plyr',
     onLoadSuccess: function() 
     {
     	var me = this;
-
-    	if (!Ext.tinymce.TinyMceEditor.sriptLoaded)
-    	{
-    		Utils.log("Plyr HTML5 Media - Script loaded");
-    	}
-
-    	//ToolkitUtils.unmask(me.editorLoadingMask);
-
-    	me.on('blur', function(elm, ev, eOpts) 
-    	{
-    		var ctrl = document.getElementById(me.getInputId());
-
-    		if (me.wysiwygIntialized) 
+		if (!Ext.plyr.Plyr.sriptLoaded) 
+		{
+			me.plyrLog("   JS loaded", 1);
+			//
+			// Load the CSS
+			//
+			Ext.plyr.Plyr.sriptLoaded = 1;
+			new Ext.util.DelayedTask(function()
     		{
-    			var ed = tinymce.get(me.getInputId());
-    			//
-    			// In the HTML text modus, the contents should be synchronized upon the blur event
-    			//
-    			if (ed && ed.isHidden()) 
+    			Ext.Loader.loadScript(
     			{
-    				if (ctrl) 
-    				{
-    					me.positionBeforeBlur = { start: ctrl.selectionStart, end: ctrl.selectionEnd };
-    				}
-    				ed.load();
-    			}
-    		}
-    		else if (ctrl) 
-    		{
-    			me.positionBeforeBlur = { start: ctrl.selectionStart, end: ctrl.selectionEnd };
-    		}
-    		else
-    		{
-    			Utils.logError("TinyMCE Editor - Control element not found");
-    		}
-    	}, me);
-
-    	if (!me.noWysiwyg && !me.wysiwygIntialized) 
-    	{
-    		me.initEditor(me.getHeight());
-    		if (me.initialValue)
-    		{
-    			me.setValue(me.initialValue);
-    			me.initialValue = null;
-    		}
+    				url: Ext.manifest.resources.base + '/plyr/plyr.css',
+    				//charset: 'UTF-8',
+    				onLoad: me.onLoadSuccess,
+    				onError: me.onLoadError,
+    				scope: me
+    			});
+    		}, me).delay(5);
     	}
-
-    	Ext.tinymce.TinyMceEditor.sriptLoaded = true;
-
-    	/*
-    	 * ExtJs 6.5 - removed 'resize' event, need to now use onResize() override
-    	 * 
-       me.on('resize', function (elm, width, height, oldWidth, oldHeight, eOpts) 
-       {
-
-    	   if (!me.noWysiwyg && !me.wysiwygIntialized) 
-           {
-               me.initEditor(height);
-           }
-           else
-           {
-               me.syncEditorHeight(height);
-           }
-       }, me);*/
-    },
-
-
-    onResize: function(width, height, oldWidth, oldHeight)
-    {
-    	var me = this;
-    	me.callParent(arguments);
-
-    	if (!Ext.tinymce.TinyMceEditor.sriptLoaded)
+    	else if (Ext.plyr.Plyr.sriptLoaded === 1)
     	{
-    		return;
+			//
+			// JS and CSS both loaded, initialize the plyr component
+			//
+			me.plyrLog("   CSS loaded", 1);
+			Ext.plyr.Plyr.sriptLoaded = true;
+			me.player = new Plyr('#player_' + Ext.plyr.Plyr.playerIdCounter);
+			Ext.plyr.Plyr.playerIdCounter++;
+			me.plyrLog("    Player initialized", 1);
+
+			//console.log(me.player);
     	}
-
-    	if (!me.noWysiwyg && !me.wysiwygIntialized) 
-    	{
-    		me.initEditor(height);
-    	}
-    	else
-    	{
-    		me.syncEditorHeight(height);
-    	}
-
-    },
-
-
-    syncEditorHeight: function (height) 
-    {
-    	var me = this;
-
-    	me.lastHeight = height;
-
-    	if (!me.wysiwygIntialized || !me.rendered) { return; }
-
-    	var ed = tinymce.get(me.getInputId());
-
-    	// if the editor is hidden, we do not syncronize
-    	// because the size values of the hidden editor
-    	// are calculated wrong.
-
-    	if (ed.isHidden()) { return; }
-
-    	var edIframe = Ext.get(me.getInputId() + "_ifr");
-
-    	var parent = edIframe.up(".mce-edit-area");
-    	parent = parent.up(".mce-container-body");
-
-    	var newHeight = height;
-
-    	var edToolbar = parent.down(".mce-toolbar-grp");
-    	if(edToolbar) 
-    		newHeight -= edToolbar.getHeight();
-
-    	var edMenubar = parent.down(".mce-menubar");
-    	if(edMenubar) 
-    		newHeight -= edMenubar.getHeight();
-
-    	var edStatusbar = parent.down(".mce-statusbar");
-    	if(edStatusbar) 
-    		newHeight -= edStatusbar.getHeight();
-
-    	me.lastFrameHeight = newHeight - 3;
-
-    	edIframe.setHeight(newHeight - 3);
-
-    	return newHeight - 3;
-    },
-
-
-    showBorder: function(state) 
-    {
-    	var me = this;
-
-    	var elm = Ext.getDom(me.getId() + "-inputWrap");
-    	if(!elm) return;
-
-    	if(state) elm.classList.remove("tinymce-hide-border");
-    	else      elm.classList.add("tinymce-hide-border");
-
-    	var elm = Ext.getDom(me.getId() + "-triggerWrap");
-    	if(!elm) return;
-
-    	if(state) elm.classList.remove("tinymce-hide-border");
-    	else      elm.classList.add("tinymce-hide-border");
-    },
-
-
-    initEditor: function (height) 
-    {
-
-    	var me = this;
-
-    	if (me.intializationInProgress || me.wysiwygIntialized) { return; }
-
-    	me.intializationInProgress = true;
-
-    	me.player = new Plyr('#player');
-
-    	me.intializationInProgress = false;
-    	me.wysiwygIntialized = true;
-    }
-
+	}
 });
-
