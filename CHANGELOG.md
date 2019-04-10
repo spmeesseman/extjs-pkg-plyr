@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.6](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.5...v1.0.6) (2019-04-10)
+
+
+### Bug Fixes
+
+* cant load more than one player instance ([1656edf](https://github.com/spmeesseman/extjs-pkg-plyr/commit/1656edf))
+
+
+### Documentation
+
+* **readme:** update credits info of ply developer and project [skip ci] ([aadbf89](https://github.com/spmeesseman/extjs-pkg-plyr/commit/aadbf89))
+
 ## [1.0.5](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.4...v1.0.5) (2019-04-09)
 
 
