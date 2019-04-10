@@ -172,6 +172,10 @@ Ext.define('Ext.plyr.Plyr',
 				me.plyrLog("   CSS loaded", 1);
 			}
 			Ext.plyr.Plyr.sriptLoaded = true;
+			me.onLoadSuccess(); // re-call with new scriptLoaded param set
+    	}
+		else if (Ext.plyr.Plyr.sriptLoaded === true)
+		{
 			me.player = new Plyr(me.playerId);
 			if (me.plyrLog) {
 				me.plyrLog("    Player initialized", 1);
@@ -192,6 +196,6 @@ Ext.define('Ext.plyr.Plyr',
 					}
 				}
 			}
-    	}
+		}
 	}
 });
