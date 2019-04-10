@@ -8,7 +8,7 @@
 
 ## Description
 
-> This package provides an ExtJS package wrapper for the plyr html5 media player.
+> This package provides an ExtJS package wrapper for the [plyr html5 media player](https://github.com/sampotts/plyr) by [Sam Potts](https://github.com/sampotts), available on [npmjs.org](https://www.npmjs.com/package/plyr).  The plyr package is used as a dependency and this package will include its distribution files into ExtJs client builds.
 
 ## Install
 
