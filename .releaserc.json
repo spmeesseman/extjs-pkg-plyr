@@ -15,7 +15,7 @@
                         "release": "patch"
                     },
                     {
-                        "type": "style",
+                        "type": "featmin",
                         "release": "patch"
                     }
                 ],
