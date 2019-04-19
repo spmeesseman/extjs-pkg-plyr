@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.7](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.6...v1.0.7) (2019-04-19)
+
+
+### Documentation
+
+* **readme:** add Greenkeeper badge ([e661d77](https://github.com/spmeesseman/extjs-pkg-plyr/commit/e661d77))
+
 ## [1.0.6](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.5...v1.0.6) (2019-04-10)
 
 
