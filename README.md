@@ -4,7 +4,7 @@
 [![Build Status](https://dev.azure.com/spmeesseman/extjs-pkg-plyr/_apis/build/status/spmeesseman.extjs-pkg-plyr?branchName=master)](https://dev.azure.com/spmeesseman/extjs-pkg-plyr/_build/latest?definitionId=2&branchName=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/spmeesseman/extjs-pkg-plyr/badge.svg)](https://snyk.io/test/github/spmeesseman/extjs-pkg-plyr)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/spmeesseman/extjs-pkg-plyr.svg)](https://isitmaintained.com/project/spmeesseman/extjs-pkg-plyr "Average time to resolve an issue")
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/spmeesseman/extjs-pkg-plyr.svg)](https://isitmaintained.com/project/spmeesseman/extjs-pkg-plyr "Percentage of issues still open")
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/spmeesseman/extjs-pkg-plyr.svg)](https://isitmaintained.com/project/spmeesseman/extjs-pkg-plyr "Percentage of issues still open") [![Greenkeeper badge](https://badges.greenkeeper.io/spmeesseman/extjs-pkg-plyr.svg)](https://greenkeeper.io/)
 
 ## Description
 
