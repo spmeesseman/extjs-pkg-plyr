@@ -36,6 +36,10 @@
 			"path": "cz-conventional-changelog"
 		}
 	},
+	"files": [
+		"build.xml",
+		"src"
+	],
 	"sencha": {
 		"name": "plyr",
 		"namespace": "Ext",
