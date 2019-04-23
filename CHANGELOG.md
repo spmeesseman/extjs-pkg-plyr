@@ -1,5 +1,28 @@
 # Change Log
 
+## [1.0.8](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.7...v1.0.8) (2019-04-23)
+
+
+### Bug Fixes
+
+* first set of issues in first plyr implementation are resolved, first working built out api at extjs component level ([d834b3c](https://github.com/spmeesseman/extjs-pkg-plyr/commit/d834b3c))
+
+
+### Build System
+
+* **npm:** update security vulnerablities.  manual changes needed for tar vulnerability. ([c1f2e8d](https://github.com/spmeesseman/extjs-pkg-plyr/commit/c1f2e8d))
+* **semantic-release:** add featmin keyword to commit-analyzer ([0d547c8](https://github.com/spmeesseman/extjs-pkg-plyr/commit/0d547c8))
+
+
+### Code Refactoring
+
+* change namespace/component name from Ext.plyr.Plyr to Ext.ux.Plyr ([774cf66](https://github.com/spmeesseman/extjs-pkg-plyr/commit/774cf66))
+
+
+### Documentation
+
+* **readme:** update build by me section ([f84abe3](https://github.com/spmeesseman/extjs-pkg-plyr/commit/f84abe3))
+
 ## [1.0.7](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.6...v1.0.7) (2019-04-19)
 
 
