@@ -1,4 +1,4 @@
-Ext.define('Ext.plyr.Plyr', 
+Ext.define('Ext.ux.Plyr', 
 {
     extend: 'Ext.Component',
     xtype: 'plyr',
