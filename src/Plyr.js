@@ -81,9 +81,8 @@ Ext.define('Ext.plyr.Plyr',
 	{
 		destroy: function(cmp, eopts)
 		{
-			console.error('CHECK TO MAKE SURE THIS IS BEING CALLED!!!  REMOVE WHEN CONFIRMED');
+			var me = this;
 			if (me.player) {
-				console.warning('REMOVE WHEN CONFIRMED');
 				me.player.destroy();
 			}
 		}
@@ -117,7 +116,6 @@ Ext.define('Ext.plyr.Plyr',
 
 	taskRunner: null,
 	taskRunnerTask: null,
-	taskRunnerTaskStep: 2,
 
 	ffwd: function(seconds)
 	{
@@ -134,9 +132,6 @@ Ext.define('Ext.plyr.Plyr',
 		}
 
 		if (!seconds) {
-			seconds = me.taskRunnerTaskStep;
-		}
-		if (!seconds) {
 			seconds = 2;
 		}
 
@@ -144,7 +139,7 @@ Ext.define('Ext.plyr.Plyr',
 	},
 
 
-	ffwdStart: function(seconds, intervalms)
+	ffwdStart: function(seconds, stepms)
 	{
 		var me = this;
 
@@ -158,8 +153,7 @@ Ext.define('Ext.plyr.Plyr',
 			return;
 		}
 
-		me.pause();
-		me.ffwd(seconds);
+		me.player.forward(seconds);
 
 		//
 		// TODO - this should actually use a webworker in the case the browser window
@@ -168,16 +162,18 @@ Ext.define('Ext.plyr.Plyr',
 		if (!me.taskRunner) {
 			me.taskRunner = new Ext.util.TaskRunner();	
 		}
-		if (!me.taskRunnerTask) {
-			me.taskRunnerTaskStep = seconds;
-			me.taskRunnerTask = me.taskRunner.start({
-				run: me.ffwd,
-				interval: intervalms ? intervalms : 500
-			});
+
+		if (me.taskRunnerTask) {
+			// TODO - stop current task
 		}
-		else {
-			// TODO
-		}
+
+		me.taskRunnerTask = me.taskRunner.start({
+			run: function()
+			{
+				me.player.forward(seconds);
+			},
+			interval: stepms ? stepms : 500
+		});
 	},
 
 
@@ -199,8 +195,6 @@ Ext.define('Ext.plyr.Plyr',
 		{
 			me.taskRunner.stop(me.taskRunnerTask, true);
 			me.taskRunnerTask = null;
-			me.taskRunnerTaskStep = 1;
-			me.play(); // TODO - should pick up in state where we were on Start()
 		}
 	},
 
@@ -274,14 +268,14 @@ Ext.define('Ext.plyr.Plyr',
 		}
 
 		if (!seconds) {
-			seconds = me.taskRunnerTaskStep;
+			seconds = 2;
 		}
 
 		me.player.rewind(seconds);
 	},
 
 
-	rwdStart: function(seconds, intervalms)
+	rwdStart: function(seconds, stepms)
 	{
 		var me = this;
 
@@ -296,25 +290,27 @@ Ext.define('Ext.plyr.Plyr',
 		}
 
 		me.pause();
-		me.rwd(seconds);
+		me.player.rewind(seconds);
 
-		//
+		///
 		// TODO - this should actually use a webworker in the case the browser window
 		// loses focus or is not the active window
 		//
 		if (!me.taskRunner) {
 			me.taskRunner = new Ext.util.TaskRunner();	
 		}
-		if (!me.taskRunnerTask) {
-			me.taskRunnerTaskStep = seconds;
-			me.taskRunnerTask = me.taskRunner.start({
-				run: me.rwd,
-				interval: intervalms ? intervalms : 500
-			});
+
+		if (me.taskRunnerTask) {
+			// TODO - stop current task
 		}
-		else {
-			// TODO
-		}
+
+		me.taskRunnerTask = me.taskRunner.start({
+			run: function()
+			{
+				me.player.rewind(seconds);
+			},
+			interval: stepms ? stepms : 500
+		});
 	},
 
 
