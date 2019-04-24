@@ -52,7 +52,7 @@ Ext.define('Ext.ux.Plyr',
     {
 		var me = this;
 		if (!me.idRoot) {
-			me.idRoot = ++Ext.plyr.Plyr.playerIdCounter;
+			me.idRoot = ++Ext.ux.Plyr.playerIdCounter;
 			me.playerId = 'player_' + me.idRoot.toString();
 		}
         return me.idRoot;
@@ -337,7 +337,7 @@ Ext.define('Ext.ux.Plyr',
     	//
     	// Load script
     	//
-    	if (!Ext.plyr.Plyr.sriptLoaded)
+    	if (!Ext.ux.Plyr.sriptLoaded)
     	{
     		new Ext.util.DelayedTask(function()
     		{
@@ -369,9 +369,9 @@ Ext.define('Ext.ux.Plyr',
     {
 		var me = this;
 		if (me.plyrLog) {
-			if (!Ext.plyr.Plyr.sriptLoaded)
+			if (!Ext.ux.Plyr.sriptLoaded)
 				me.plyrLog("   Error loading JS", 1);
-			else if (Ext.plyr.Plyr.sriptLoaded === 1)
+			else if (Ext.ux.Plyr.sriptLoaded === 1)
 				me.plyrLog("   Error loading CSS", 1);
 		}
     },
@@ -383,7 +383,7 @@ Ext.define('Ext.ux.Plyr',
     onLoadSuccess: function() 
     {
     	var me = this;
-		if (!Ext.plyr.Plyr.sriptLoaded) 
+		if (!Ext.ux.Plyr.sriptLoaded) 
 		{
 			if (me.plyrLog) {
 				me.plyrLog("   JS loaded", 1);
@@ -391,7 +391,7 @@ Ext.define('Ext.ux.Plyr',
 			//
 			// Load the CSS
 			//
-			Ext.plyr.Plyr.sriptLoaded = 1;
+			Ext.ux.Plyr.sriptLoaded = 1;
 			new Ext.util.DelayedTask(function()
     		{
     			Ext.Loader.loadScript(
@@ -404,7 +404,7 @@ Ext.define('Ext.ux.Plyr',
     			});
     		}, me).delay(5);
     	}
-    	else if (Ext.plyr.Plyr.sriptLoaded === 1)
+    	else if (Ext.ux.Plyr.sriptLoaded === 1)
     	{
 			//
 			// JS and CSS both loaded, initialize the plyr component
@@ -412,10 +412,10 @@ Ext.define('Ext.ux.Plyr',
 			if (me.plyrLog) {
 				me.plyrLog("   CSS loaded", 1);
 			}
-			Ext.plyr.Plyr.sriptLoaded = true;
+			Ext.ux.Plyr.sriptLoaded = true;
 			me.onLoadSuccess(); // re-call with new scriptLoaded param set
     	}
-		else if (Ext.plyr.Plyr.sriptLoaded === true)
+		else if (Ext.ux.Plyr.sriptLoaded === true)
 		{
 			var opts = {
 				enabled: true,           // Whether to completely disable Plyr
