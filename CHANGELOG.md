@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.9](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.8...v1.0.9) (2019-04-24)
+
+
+### Bug Fixes
+
+* undefined property Plyr when loading ([13bb3ec](https://github.com/spmeesseman/extjs-pkg-plyr/commit/13bb3ec))
+
 ## [1.0.8](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.7...v1.0.8) (2019-04-23)
 
 
