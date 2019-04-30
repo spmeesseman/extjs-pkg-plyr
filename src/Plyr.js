@@ -135,6 +135,8 @@ Ext.define('Ext.ux.Plyr',
 			seconds = 2;
 		}
 
+		me.stopTaskRunner();
+
 		me.player.forward(seconds);
 	},
 
@@ -153,6 +155,8 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
+		me.stopTaskRunner();
+
 		me.player.forward(seconds);
 
 		//
@@ -161,10 +165,6 @@ Ext.define('Ext.ux.Plyr',
 		//
 		if (!me.taskRunner) {
 			me.taskRunner = new Ext.util.TaskRunner();	
-		}
-
-		if (me.taskRunnerTask) {
-			// TODO - stop current task
 		}
 
 		me.taskRunnerTask = me.taskRunner.start({
@@ -191,11 +191,7 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
-		if (me.taskRunner && me.taskRunnerTask)
-		{
-			me.taskRunner.stop(me.taskRunnerTask, true);
-			me.taskRunnerTask = null;
-		}
+		me.stopTaskRunner();
 	},
 
 
@@ -212,6 +208,8 @@ Ext.define('Ext.ux.Plyr',
 			}
 			return;
 		}
+
+		me.stopTaskRunner();
 
 		me.player.pause();
 	},
@@ -231,6 +229,8 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
+		me.stopTaskRunner();
+
 		me.player.play();
 	},
 
@@ -248,6 +248,8 @@ Ext.define('Ext.ux.Plyr',
 			}
 			return;
 		}
+
+		me.stopTaskRunner();
 
 		me.player.togglePlay();
 	},
@@ -271,6 +273,8 @@ Ext.define('Ext.ux.Plyr',
 			seconds = 2;
 		}
 
+		me.stopTaskRunner();
+
 		me.player.rewind(seconds);
 	},
 
@@ -289,7 +293,8 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
-		me.pause();
+		me.stopTaskRunner();
+
 		me.player.rewind(seconds);
 
 		///
@@ -300,10 +305,6 @@ Ext.define('Ext.ux.Plyr',
 			me.taskRunner = new Ext.util.TaskRunner();	
 		}
 
-		if (me.taskRunnerTask) {
-			// TODO - stop current task
-		}
-
 		me.taskRunnerTask = me.taskRunner.start({
 			run: function()
 			{
@@ -311,6 +312,17 @@ Ext.define('Ext.ux.Plyr',
 			},
 			interval: stepms ? stepms : 500
 		});
+	},
+
+
+	stopTaskRunner: function()
+	{
+		var me = this;
+		if (me.taskRunner && me.taskRunnerTask)
+		{
+			me.taskRunner.stop(me.taskRunnerTask, true);
+			me.taskRunnerTask = null;
+		}
 	},
 
 
