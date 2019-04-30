@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.11](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.10...v1.0.11) (2019-04-30)
+
+
+### Code Refactoring
+
+* remove build.xml from release package ([a1684e5](https://github.com/spmeesseman/extjs-pkg-plyr/commit/a1684e5))
+
+
+### Documentation
+
+* **readme:** remove testing info ([81658a4](https://github.com/spmeesseman/extjs-pkg-plyr/commit/81658a4))
+
 ## [1.0.10](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.9...v1.0.10) (2019-04-30)
 
 
