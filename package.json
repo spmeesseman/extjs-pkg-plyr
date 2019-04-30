@@ -5,14 +5,6 @@
 	"publisher": "spmeesseman",
 	"version": "1.0.10",
 	"license": "MIT",
-	"homepage": "https://github.com/spmeesseman/extjs-pkg-plyr/blob/master/README.md",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/spmeesseman/extjs-pkg-plyr.git"
-	},
-	"bugs": {
-		"url": "https://github.com/spmeesseman/extjs-pkg-plyr/issues"
-	},
 	"dependencies": {
 		"plyr": "^3.5.2"
 	},
@@ -37,7 +29,6 @@
 		}
 	},
 	"files": [
-		"build.xml",
 		"src"
 	],
 	"sencha": {
@@ -45,9 +36,7 @@
 		"namespace": "Ext",
 		"framework": "ext",
 		"type": "code",
-		"toolkit": "classic",
-		"theme": "theme-neptune",
-		"creator": "smeesseman",
+		"creator": "spmeesseman",
 		"summary": "Package wrapper for plyr",
 		"detailedDescription": "Package wrapper for the plyr media player",
 		"version": "3.5.2.0",
