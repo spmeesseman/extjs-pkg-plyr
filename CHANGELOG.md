@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.10](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.9...v1.0.10) (2019-04-30)
+
+
+### Bug Fixes
+
+* stop running rwd/ffwd timer on any new command ([79f4fc7](https://github.com/spmeesseman/extjs-pkg-plyr/commit/79f4fc7))
+
+
+### Documentation
+
+* **readme:** update builds list [skip ci] ([406aff8](https://github.com/spmeesseman/extjs-pkg-plyr/commit/406aff8))
+
 ## [1.0.9](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.8...v1.0.9) (2019-04-24)
 
 
