@@ -1,5 +1,5 @@
 {
-	"name": "extjs-pkg-plyr",
+	"name": "@spmeesseman/extjs-pkg-plyr",
 	"displayName": "ExtJS Package Wrapper for plyr",
 	"description": "ExtJS Package Wrapper for plyr",
 	"publisher": "spmeesseman",
@@ -27,6 +27,9 @@
 		"commitizen": {
 			"path": "cz-conventional-changelog"
 		}
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"files": [
 		"src"
