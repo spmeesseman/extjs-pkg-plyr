@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.12](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.11...v1.0.12) (2019-05-01)
+
+
+### Code Refactoring
+
+* make package scoped ([6180d14](https://github.com/spmeesseman/extjs-pkg-plyr/commit/6180d14))
+
 ## [1.0.11](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.10...v1.0.11) (2019-04-30)
 
 
