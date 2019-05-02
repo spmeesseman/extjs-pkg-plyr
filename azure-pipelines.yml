@@ -8,99 +8,9 @@ trigger:
     include:
     - master
     - greenkeeper/*
-# 
-# pool:
-#   vmImage: 'Ubuntu-16.04'
-# 
-# steps:
-# - task: NodeTool@0
-#   inputs:
-#     versionSpec: '10.x'
-#   displayName: 'Install Node.js'
-# 
-# - script: |
-#     npm install
-#     npm run build
-#   displayName: 'npm install and build'
-# 
 
 jobs:
-  - job: Windows
-    pool:
-      vmImage: 'vs2017-win2016'
-      demands: npm
-    steps:
-      - task: NodeTool@0
-        displayName: 'Use Node 8.x'
-        inputs:
-          versionSpec: 8.x
-      - task: Npm@1
-        displayName: 'Install dependencies'
-        inputs:
-          verbose: false
-          #customEndpoint: 'privatesencharepo'
-  #    - task: Npm@1
-  #      displayName: 'Compile sources'
-  #      inputs:
-  #        command: custom
-  #        verbose: true
-  #        customCommand: 'run build'
-  #- job: Linux
-  #  pool:
-  #    name: Hosted Ubuntu 1604
-  #    demands: npm
-  #  steps:
-  #    - task: NodeTool@0
-  #      displayName: 'Use Node 8.x'
-  #      inputs:
-  #        versionSpec: 8.x
-  #    - task: JavaToolInstaller@0
-  #      inputs:
-  #        versionSpec: '8' 
-  #        jdkArchitectureOption: x64
-  #        jdkSourceOption: localDirectory
-  #        jdkFile: 'java/jre.zip'
-  #        jdkDestinationDirectory: 'java/jre'
-  #    - task: Npm@1
-  #      displayName: 'Install dependencies'
-  #      inputs:
-  #        verbose: false
-  #        customEndpoint: 'privatesencharepo'
-  #    - task: Npm@1
-  #      displayName: 'Compile sources'
-  #      inputs:
-  #        command: custom
-  #        verbose: true
-  #        customCommand: 'run build'
-  #    - script: |
-  #        set -e
-  #        /usr/bin/Xvfb :10 -ac >> /tmp/Xvfb.out 2>&1 &
-  #        disown -ar
-  #      displayName: 'Start xvfb'
-  #    - bash: sed -i.bak 's/"\*"//g' package.json
-  #      displayName: 'Enable full coverage'
-  #    - task: PublishTestResults@2
-  #      displayName: 'Publish Test Results'
-  #      inputs:
-  #        testResultsFormat: 'JUnit'
-  #        testResultsFiles: 'test-reports/*.xml'
-  #        mergeTestResults: true
-  #        testRunTitle: '$(Agent.OS) $(Agent.JobName)'
-  #    - task: PublishCodeCoverageResults@1
-  #      displayName: 'Publish Code Coverage to Azure'
-  #      inputs:
-  #        codeCoverageTool: Cobertura
-  #        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-  #        reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
-  #    - script: node_modules/.bin/codecov --disable=gcov
-  #      displayName: 'Publish Code Coverage to Codecov'
-  #      env:
-  #        CODECOV_TOKEN: $(codecovToken)
-  - job: Release
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    dependsOn:
-    - Windows
-    #- Linux
+  - job: Linux
     pool:
       name: Hosted Ubuntu 1604
       demands: npm
@@ -113,6 +23,30 @@ jobs:
         displayName: 'Install dependencies'
         inputs:
           verbose: false
+      - bash: chmod 777 ./build.sh
+        displayName: 'Make build file executable'
+      - bash: ./build.sh
+        displayName: 'Build release files'
+  - job: Release
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    dependsOn:
+    - Linux
+    pool:
+      name: Hosted Ubuntu 1604
+      demands: npm
+    steps:
+      - task: NodeTool@0
+        displayName: 'Use Node 8.x'
+        inputs:
+          versionSpec: 8.x
+      - task: Npm@1
+        displayName: 'Install dependencies'
+        inputs:
+          verbose: false
+      - bash: chmod 777 ./build.sh
+        displayName: 'Make build file executable'
+      - bash: ./build.sh
+        displayName: 'Build release files'
       - script: |
           set -e
           /usr/bin/Xvfb :10 -ac >> /tmp/Xvfb.out 2>&1 &
