@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.13](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.12...v1.0.13) (2019-05-02)
+
+
+### Bug Fixes
+
+* include plyr files in package, not as separate dependency ([0ac7e3f](https://github.com/spmeesseman/extjs-pkg-plyr/commit/0ac7e3f))
+
 ## [1.0.12](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.11...v1.0.12) (2019-05-01)
 
 
