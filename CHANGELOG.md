@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.15](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.14...v1.0.15) (2019-05-03)
+
+
+### Bug Fixes
+
+* copy plyr dist from new local package dir on sencha app build ([1d18cf9](https://github.com/spmeesseman/extjs-pkg-plyr/commit/1d18cf9))
+
 ## [1.0.14](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.13...v1.0.14) (2019-05-03)
 
 
