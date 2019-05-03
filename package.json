@@ -3,7 +3,7 @@
 	"displayName": "ExtJS Package Wrapper for plyr",
 	"description": "ExtJS Package Wrapper for plyr",
 	"publisher": "spmeesseman",
-	"version": "1.0.13",
+	"version": "1.0.14",
 	"license": "MIT",
 	"devDependencies": {
 		"@semantic-release/changelog": "^3.0.2",

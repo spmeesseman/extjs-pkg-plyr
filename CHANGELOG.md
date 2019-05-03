@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.14](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.13...v1.0.14) (2019-05-03)
+
+
+### Bug Fixes
+
+* include plyr files in package, not as separate dependency ([e1b9f0a](https://github.com/spmeesseman/extjs-pkg-plyr/commit/e1b9f0a))
+
+
+### Build System
+
+* **npm:** back to non-scoped conventional-changelog-spm ([e2372cc](https://github.com/spmeesseman/extjs-pkg-plyr/commit/e2372cc))
+
 ## [1.0.13](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.12...v1.0.13) (2019-05-02)
 
 
