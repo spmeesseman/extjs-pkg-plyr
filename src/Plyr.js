@@ -17,6 +17,7 @@ Ext.define('Ext.ux.Plyr',
     },
 
 	plyrOnLoaded: Ext.emptyFn,
+	plyrOnProgress: Ext.emptyFn,
 	plyrLog: Ext.emptyFn,
 
     statics:
@@ -432,7 +433,7 @@ Ext.define('Ext.ux.Plyr',
 			var opts = {
 				enabled: true,           // Whether to completely disable Plyr
 				debug: false,            // Display debugging information in the console
-				autoplay: false,         // Autoplay the media on load. This is generally advised against
+				autoplay: true,         // Autoplay the media on load. This is generally advised against
 				autopause: true,         // Only allow one player playing at once
 				muted: false,            // Whether to start playback muted
 				hideControls: true,      // Hide video controls automatically after 2s of no mouse
@@ -456,32 +457,60 @@ Ext.define('Ext.ux.Plyr',
 				keyboard: { focused: true, global: false }, // Enable keyboard shortcuts for focused players only or globally
 				tooltips: { controls: false, seek: true },  // Display control labels as tooltips on :hover & :focus (by default, the labels are screen reader only). seek: Display a seek tooltip to indicate on click where the media would seek to.
 				storage:  { enabled: true, key: 'plyr' },   // enabled: Allow use of local storage to store user settings. key: The key name to use.
-				captions: { active: false, language: 'auto', update: false }
+				captions: { active: false, language: 'auto', update: false },
+				speed:    { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] }
 			};
 
 			//me.player = new Plyr('#' + me.playerId, opts);
 			me.player = new Plyr('#' + me.playerId);
-
-			if (me.plyrLog) {
-				me.plyrLog("    Player initialized", 1);
-				me.plyrLog("       ID: " + me.playerId, 1);
-			}
-			if (me.plyrOnLoaded) {
-				if (me.plyrOnLoaded instanceof Function) {
-					me.plyrOnLoaded(me.playerId, me.player);
+			//me.player.play();
+			//me.player.pause();
+			
+			me.player.on('ready', function(e) {
+				if (me.plyrLog) {
+					me.plyrLog("    Player initialized", 1);
+					me.plyrLog("       ID: " + me.playerId, 1);
 				}
-				else if (me.plyrOnLoaded instanceof Object)
-				{
-					if (me.plyrOnLoaded.fn) {
-						if (me.plyrOnLoaded.scope) {
-							Ext.Function.pass(me.plyrOnLoaded.fn, [ me.playerId, me.player ], me.plyrOnLoaded.scope)();
-						}
-						else {
-							me.plyrOnLoaded.fn(me.playerId, me.player);
+				if (me.plyrOnLoaded) {
+					if (me.plyrOnLoaded instanceof Function) {
+						me.plyrOnLoaded(me.playerId, me.player);
+					}
+					else if (me.plyrOnLoaded instanceof Object)
+					{
+						if (me.plyrOnLoaded.fn) {
+							if (me.plyrOnLoaded.scope) {
+								Ext.Function.pass(me.plyrOnLoaded.fn, [ me.playerId, me.player ], me.plyrOnLoaded.scope)();
+							}
+							else {
+								me.plyrOnLoaded.fn(me.playerId, me.player);
+							}
 						}
 					}
 				}
-			}
+			});
+
+			me.player.on('progress', function(e) {
+				if (me.plyrLog) {
+					me.plyrLog("    Player progress", 1);
+					me.plyrLog("       ID: " + me.playerId, 1);
+				}
+				if (me.plyrOnProgress) {
+					if (me.plyrOnProgress instanceof Function) {
+						me.plyrOnProgress(me.playerId, me.player);
+					}
+					else if (me.plyrOnProgress instanceof Object)
+					{
+						if (me.plyrOnProgress.fn) {
+							if (me.plyrOnProgress.scope) {
+								Ext.Function.pass(me.plyrOnProgress.fn, [ me.playerId, me.player ], me.plyrOnProgress.scope)();
+							}
+							else {
+								me.plyrOnProgress.fn(me.playerId, me.player);
+							}
+						}
+					}
+				}
+			});
 		}
 	}
 });
