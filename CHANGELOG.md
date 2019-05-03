@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.1.0](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.15...v1.1.0) (2019-05-03)
+
+
+### Features
+
+* emit onLoaded and onProgress events for ui to consume ([ada5c13](https://github.com/spmeesseman/extjs-pkg-plyr/commit/ada5c13))
+
 ## [1.0.15](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.14...v1.0.15) (2019-05-03)
 
 
