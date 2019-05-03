@@ -52,7 +52,7 @@
 		},
 		"resources": [
 			{
-				"path": "${package.dir}/../plyr/dist",
+				"path": "${package.dir}/plyr",
 				"output": "base"
 			}
 		],
