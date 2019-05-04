@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.2.0](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.1.0...v1.2.0) (2019-05-04)
+
+
+### Features
+
+* add additional speed steps 0.6, 0.7, 0.8, 0.9 ([0ecc9b6](https://github.com/spmeesseman/extjs-pkg-plyr/commit/0ecc9b6))
+
 # [1.1.0](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.0.15...v1.1.0) (2019-05-03)
 
 
