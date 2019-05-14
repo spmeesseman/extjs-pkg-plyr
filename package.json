@@ -1,9 +1,11 @@
 {
 	"name": "@spmeesseman/extjs-pkg-plyr",
+	"version": "1.2.0",
 	"displayName": "ExtJS Package Wrapper for plyr",
 	"description": "ExtJS Package Wrapper for plyr",
-	"author": "spmeesseman",
-	"version": "1.2.0",
+	"author": {
+		"name": "Scott Meesseman"
+	},
 	"license": "MIT",
 	"devDependencies": {
 		"@semantic-release/changelog": "^3.0.2",
