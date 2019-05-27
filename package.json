@@ -3,30 +3,34 @@
 	"version": "1.2.0",
 	"displayName": "ExtJS Package Wrapper for plyr",
 	"description": "ExtJS Package Wrapper for plyr",
-	"author": {
-		"name": "Scott Meesseman"
-	},
 	"license": "MIT",
+	"author": {
+		"name": "Scott Meesseman",
+		"email": "smeesseman@pjats.com"
+	},
+	"homepage": "https://issues.development.pjats.com/extjs-pkg-plyr",
+    "bugs": {
+        "email": "smeesseman@pjats.com",
+		"url": "https://issues.development.pjats.com/extjs-pkg-plyr/ticket/1"
+    },
+    "repository": {
+        "type": "svn",
+        "url": "https://svn.development.pjats.com/repos/pja/extjs-pkg-plyr/trunk"
+    },
 	"devDependencies": {
 		"@semantic-release/changelog": "^3.0.2",
 		"@semantic-release/exec": "^3.3.0",
 		"@semantic-release/git": "^7.0.8",
-		"commitizen": "^3.0.7",
 		"conventional-changelog-spm": "^1.2.3",
-		"cz-conventional-changelog": "^2.1.0",
 		"plyr": "^3.5.2",
 		"semantic-release": "^15.13.12"
 	},
 	"scripts": {
-		"build": "npx sencha package build",
-		"repo-release": "npx sencha package add build\\plyr\\plyr.pkg",
+		"build": "build.sh",
+		"app-publish": "app-publisher -p pja",
+		"app-publish-dry": "app-publisher -p pja --dry-run",
 		"semantic-release": "semantic-release --no-ci",
 		"semantic-release-dry": "semantic-release --dry-run"
-	},
-	"config": {
-		"commitizen": {
-			"path": "cz-conventional-changelog"
-		}
 	},
 	"publishConfig": {
 		"access": "public"
@@ -43,8 +47,8 @@
 		"creator": "spmeesseman",
 		"summary": "Package wrapper for plyr",
 		"detailedDescription": "Package wrapper for the plyr media player",
-		"version": "3.5.2.0",
-		"compatVersion": "3.5.2",
+		"version": "1.2.0.0",
+		"compatVersion": "1.2.0",
 		"format": "1",
 		"slicer": null,
 		"output": "${framework.dir}/build/packages/${package.name}",

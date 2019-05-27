@@ -1,4 +1,4 @@
-# Change Log
+# EXTJS-PKG-PLYR CHANGE LOG
 
 # [1.2.0](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.1.0...v1.2.0) (2019-05-04)
 
