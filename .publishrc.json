@@ -18,7 +18,7 @@
     "historyHdrFile":    "install\\history-hdr.txt",
     "historyLineLen":    80,
     "homePage":          "",
-    "interactive":       "Y",
+    "interactive":       "N",
     "npmPackDist":       "Y",
     "npmRegistry":       "https://npm.development.pjats.com",
     "npmRelease":        "Y",
