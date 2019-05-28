@@ -1,92 +1,92 @@
 {
-	"name": "@perryjohnson/extjs-pkg-plyr",
-	"version": "1.2.0",
-	"displayName": "ExtJS Package Wrapper for plyr",
-	"description": "ExtJS Package Wrapper for plyr",
-	"license": "MIT",
-	"author": {
-		"name": "Scott Meesseman",
-		"email": "smeesseman@pjats.com"
-	},
-	"homepage": "https://issues.development.pjats.com/extjs-pkg-plyr",
+    "name": "@perryjohnson/extjs-pkg-plyr",
+    "version": "1.2.1",
+    "displayName": "ExtJS Package Wrapper for plyr",
+    "description": "ExtJS Package Wrapper for plyr",
+    "license": "MIT",
+    "author": {
+        "name": "Scott Meesseman",
+        "email": "smeesseman@pjats.com"
+    },
+    "homepage": "https://issues.development.pjats.com/extjs-pkg-plyr",
     "bugs": {
         "email": "smeesseman@pjats.com",
-		"url": "https://issues.development.pjats.com/extjs-pkg-plyr/ticket/1"
+        "url": "https://issues.development.pjats.com/extjs-pkg-plyr/ticket/1"
     },
     "repository": {
         "type": "svn",
         "url": "https://svn.development.pjats.com/repos/pja/extjs-pkg-plyr/trunk"
     },
-	"devDependencies": {
-		"@semantic-release/changelog": "^3.0.2",
-		"@semantic-release/exec": "^3.3.0",
-		"@semantic-release/git": "^7.0.8",
-		"conventional-changelog-spm": "^1.2.3",
-		"plyr": "^3.5.2",
-		"semantic-release": "^15.13.12"
-	},
-	"scripts": {
-		"build": "build.sh",
-		"app-publish": "app-publisher -p ps",
-		"app-publish-dry": "app-publisher -p ps --dry-run",
-		"semantic-release": "semantic-release --no-ci",
-		"semantic-release-dry": "semantic-release --dry-run"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"files": [
-		"plyr",
-		"src"
-	],
-	"sencha": {
-		"name": "plyr",
-		"namespace": "Ext",
-		"framework": "ext",
-		"type": "code",
-		"creator": "spmeesseman",
-		"summary": "Package wrapper for plyr",
-		"detailedDescription": "Package wrapper for the plyr media player",
-		"version": "1.2.0.0",
-		"compatVersion": "1.2.0",
-		"format": "1",
-		"slicer": null,
-		"output": "${framework.dir}/build/packages/${package.name}",
-		"local": true,
-		"resource": {
-			"paths": ""
-		},
-		"resources": [
-			{
-				"path": "${package.dir}/plyr",
-				"output": "base"
-			}
-		],
-		"sass": {
-			"namespace": "Ext",
-			"etc": [
-				"${package.dir}/sass/var"
-			],
-			"var": [
-				"${package.dir}/sass/var"
-			],
-			"src": [
-				"${package.dir}/sass/src",
-				"${package.dir}/sass/src/main.scss"
-			]
-		},
-		"classpath": [
-			"${package.dir}/src"
-		],
-		"overrides": [
-			"${package.dir}/overrides"
-		],
-		"requires": [
-			"core"
-		],
-		"ignore": [
-			"(^|/)CVS(/?$|/.*?$)"
-		]
-	},
-	"dependencies": {}
+    "devDependencies": {
+        "@semantic-release/changelog": "^3.0.2",
+        "@semantic-release/exec": "^3.3.0",
+        "@semantic-release/git": "^7.0.8",
+        "conventional-changelog-spm": "^1.2.3",
+        "plyr": "^3.5.2",
+        "semantic-release": "^15.13.12"
+    },
+    "scripts": {
+        "build": "build.sh",
+        "app-publish": "app-publisher -p ps",
+        "app-publish-dry": "app-publisher -p ps --dry-run",
+        "semantic-release": "semantic-release --no-ci",
+        "semantic-release-dry": "semantic-release --dry-run"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "plyr",
+        "src"
+    ],
+    "sencha": {
+        "name": "plyr",
+        "namespace": "Ext",
+        "framework": "ext",
+        "type": "code",
+        "creator": "spmeesseman",
+        "summary": "Package wrapper for plyr",
+        "detailedDescription": "Package wrapper for the plyr media player",
+        "version": "1.2.1.0",
+        "compatversion": "1.2.1",
+        "format": "1",
+        "slicer": null,
+        "output": "${framework.dir}/build/packages/${package.name}",
+        "local": true,
+        "resource": {
+            "paths": ""
+        },
+        "resources": [
+            {
+                "path": "${package.dir}/plyr",
+                "output": "base"
+            }
+        ],
+        "sass": {
+            "namespace": "Ext",
+            "etc": [
+                "${package.dir}/sass/var"
+            ],
+            "var": [
+                "${package.dir}/sass/var"
+            ],
+            "src": [
+                "${package.dir}/sass/src",
+                "${package.dir}/sass/src/main.scss"
+            ]
+        },
+        "classpath": [
+            "${package.dir}/src"
+        ],
+        "overrides": [
+            "${package.dir}/overrides"
+        ],
+        "requires": [
+            "core"
+        ],
+        "ignore": [
+            "(^|/)CVS(/?$|/.*?$)"
+        ]
+    },
+    "dependencies": {}
 }
