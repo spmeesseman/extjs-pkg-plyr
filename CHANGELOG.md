@@ -1,5 +1,44 @@
 # EXTJS-PKG-PLYR CHANGE LOG
 
+## Version 1.2.1 (May 28th, 2019)
+
+### Build System
+
+- **npm:** fix app-publisher script arguments
+- **npm:** fix invalid attribute publisher->author [skip ci]
+- **npm:** package.json cleanup [skip ci]
+- **npm:** switch to perryjohnson scope from testing scope
+- modify script to replace speed rates in plyr source
+
+### Chores
+
+- 1.0.11 post release check in
+- 1.2.0 release update
+- add node_modules folder to ignore list
+- prep file check in for first app-publisher release
+- set scope name
+
+### Features
+
+- add additional speed playback rates to menuSpeed rates are now 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2
+- initial check in tested npm package project
+
+### Bug Fixes
+
+- include plyr release files in package
+
+### Code Styling
+
+- ignore unused files
+
+### Tests
+
+- scoped package
+
+### Other Notes
+
+- scoped package
+
 # [1.2.0](https://github.com/spmeesseman/extjs-pkg-plyr/compare/v1.1.0...v1.2.0) (2019-05-04)
 
 
@@ -166,3 +205,4 @@
 ### Code Refactoring
 
 * update wrapper - 2nd round of testing ([9a43366](https://github.com/spmeesseman/extjs-pkg-plyr/commit/9a43366))
+
