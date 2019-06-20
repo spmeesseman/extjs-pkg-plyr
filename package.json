@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "@perryjohnson/app-publisher": "^1.4.5",
-        "plyr": "^3.5.2"
+        "plyr": "^3.5.5"
     },
     "scripts": {
         "build": "build.sh",
