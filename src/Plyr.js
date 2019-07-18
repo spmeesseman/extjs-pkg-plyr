@@ -450,6 +450,7 @@ Ext.define('Ext.ux.Plyr',
 				// for the controls. Three arguments will be passed to your function; id (the unique id for the 
 				// player), seektime (the seektime step in seconds), and title (the media title). See controls.md 
 				//for more info on how the html needs to be structured.
+				// See https://github.com/spmeesseman/plyr/blob/master/controls.md for complete list of controls
 				//
 				controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
 				// If using the default controls are used then you can specify which settings to show in the menu
@@ -460,9 +461,36 @@ Ext.define('Ext.ux.Plyr',
 				captions: { active: false, language: 'auto', update: false },
 				speed:    { selected: 1, options: [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2] }
 			};
+			/*
+			var controls = [
+				'play-large', // The large play button in the center
+				'restart', // Restart playback
+				'rewind', // Rewind by the seek time (default 10 seconds)
+				'play', // Play/pause playback
+				'fast-forward', // Fast forward by the seek time (default 10 seconds)
+				'progress', // The progress bar and scrubber for playback and buffering
+				'current-time', // The current time of playback
+				'duration', // The full duration of the media
+				'mute', // Toggle mute
+				'volume', // Volume control
+				'captions', // Toggle captions
+				'settings', // Settings menu
+				'pip', // Picture-in-picture (currently Safari only)
+				'airplay', // Airplay (currently Safari only)
+				'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
+				'fullscreen', // Toggle fullscreen
+			];
+			*/
 
-			//me.player = new Plyr('#' + me.playerId, opts);
-			me.player = new Plyr('#' + me.playerId);
+			var opts2 = {
+				// count up instead of down
+				invertTime: false,
+				// show duration
+				controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen', 'duration']
+			};
+
+			me.player = new Plyr('#' + me.playerId, opts2);
+			//me.player = new Plyr('#' + me.playerId);
 			//me.player.play();
 			//me.player.pause();
 			
