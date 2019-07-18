@@ -22,9 +22,7 @@
         "plyr": "^3.5.2"
     },
     "scripts": {
-        "build": "build.sh",
-        "app-publish": "app-publisher -p ps",
-        "app-publish-dry": "app-publisher -p ps --dry-run"
+        "build": "build.sh"
     },
     "keywords": [
         "sencha extjs",
