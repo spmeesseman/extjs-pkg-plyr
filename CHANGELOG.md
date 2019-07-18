@@ -1,5 +1,32 @@
 # EXTJS-PKG-PLYR CHANGE LOG
 
+## Version 1.2.2 (July 18th, 2019)
+
+### Build System
+
+- **ap:** set history file to empty for git test
+- **ap:** set interactive flag back to N
+- **ap:** update publishrc to 1.7 config
+- **npm:** update bugs page and homepage to latest
+- **npm:** update npmrc
+
+### Documentation
+
+- **readme:** update badge info and usage info
+- **readme:** update badges
+
+### Code Refactoring
+
+- audio player should count up instead of down.
+
+	[closes #161]
+
+- use lf for package.json/pakage-lock.json for npm compatibility
+
+### Code Styling
+
+- cleanup. remove semantic-release dependencies
+
 ## Version 1.2.1 (May 28th, 2019)
 
 ### Build System

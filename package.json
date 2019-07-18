@@ -1,6 +1,6 @@
 {
     "name": "@perryjohnson/extjs-pkg-plyr",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "displayName": "ExtJS Package Wrapper for plyr",
     "description": "ExtJS Package Wrapper for plyr",
     "license": "MIT",
@@ -10,9 +10,9 @@
     },
     "bugs": {
         "email": "smeesseman@pjats.com",
-        "url": "https://app1.development.pjats.com/projects/set_project.php?project=extjs-pkg-plyr&make_default=no&ref=bug_report_page.php"
+        "url": "https://github.com/spmeesseman/extjs-pkg-plyr/issues"
     },
-    "homepage": "https://app1.development.pjats.com/svn/web/listing.php?repname=pja&path=%2Fextjs-pkg-plyr%2Ftrunk%2F",
+    "homepage": "https://github.com/spmeesseman/extjs-pkg-plyr/blob/master/README.md",
     "repository": {
         "type": "svn",
         "url": "https://svn.development.pjats.com/pja/extjs-pkg-plyr/trunk"
@@ -45,8 +45,8 @@
         "creator": "spmeesseman",
         "summary": "Package wrapper for plyr",
         "detailedDescription": "Package wrapper for the plyr media player",
-        "version": "1.2.1.0",
-        "compatversion": "1.2.1",
+        "version": "1.2.2.0",
+        "compatversion": "1.2.2",
         "format": "1",
         "slicer": null,
         "output": "${framework.dir}/build/packages/${package.name}",
