@@ -18,7 +18,7 @@
         "url": "https://svn.development.pjats.com/repos/pja/extjs-pkg-plyr/trunk"
     },
     "devDependencies": {
-        "@perryjohnson/app-publisher": "^1.4.5",
+        "@perryjohnson/app-publisher": "^1.7.3",
         "plyr": "^3.5.2"
     },
     "scripts": {
