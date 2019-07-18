@@ -26,7 +26,7 @@
     "mantisbtUrl":       "https://app1.development.pjats.com/projects",
     "mantisbtAssets": [
         "doc\\history.txt|History File",
-        "install\\dist\\extjs-pkg-server.tgz|NPM Tarball"
+        "install\\dist\\extjs-pkg-plyr.tgz|NPM Tarball"
     ],
     "npmPackDist":       "Y",
     "npmRegistry":       "https://npm.development.pjats.com",
