@@ -1,10 +1,9 @@
 # ExtJs Package Wrapper for plyr
 
+[![perry-johnson](https://img.shields.io/badge/perry%20johnson-pja-blue.svg)](https://www.perryjohnson.com)
 [![app-type](https://img.shields.io/badge/category-linux%20web%20env-blue.svg)](https://www.perryjohnson.com)
 [![app-lang](https://img.shields.io/badge/language-na%20c%23-blue.svg)](https://www.perryjohnson.com)
 [![app-publisher](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-app--publisher-e10000.svg)](https://github.com/perryjohnsoninc/app-publisher)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-
 [![authors](https://img.shields.io/badge/authors-scott%20meesseman-6F02B5.svg?logo=visual%20studio%20code)](https://github.com/perryjohnsoninc)
 
 ## Description
@@ -34,7 +33,7 @@ For an open tooling build, also add the node_modules path to the workspace.json 
 
 Simply include the control into any class file:
 
-    require: [ 'Ext.plyr.Plyr' ],
+    require: [ 'Ext.ux.Plyr' ],
     items: [
     {
         xtype: 'plyr',
