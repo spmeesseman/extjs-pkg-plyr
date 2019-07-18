@@ -10,9 +10,9 @@
     },
     "bugs": {
         "email": "smeesseman@pjats.com",
-        "url": "https://github.com/spmeesseman/extjs-pkg-plyr/issues"
+        "url": "https://app1.development.pjats.com/projects/set_project.php?project=extjs-pkg-plyr&make_default=no&ref=bug_report_page.php"
     },
-    "homepage": "https://github.com/spmeesseman/extjs-pkg-plyr/blob/master/README.md",
+    "homepage": "https://app1.development.pjats.com/svn/web/listing.php?repname=pja&path=%2Fextjs-pkg-plyr%2Ftrunk%2F",
     "repository": {
         "type": "svn",
         "url": "https://svn.development.pjats.com/pja/extjs-pkg-plyr/trunk"
