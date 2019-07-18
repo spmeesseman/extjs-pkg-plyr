@@ -8,14 +8,14 @@
         "name": "Scott Meesseman",
         "email": "smeesseman@pjats.com"
     },
-    "homepage": "https://issues.development.pjats.com/extjs-pkg-plyr",
     "bugs": {
         "email": "smeesseman@pjats.com",
-        "url": "https://issues.development.pjats.com/extjs-pkg-plyr/ticket/1"
+        "url": "https://app1.development.pjats.com/projects/set_project.php?project=extjs-pkg-plyr&make_default=no&ref=bug_report_page.php"
     },
+    "homepage": "https://app1.development.pjats.com/svn/web/listing.php?repname=pja&path=%2Fextjs-pkg-plyr%2Ftrunk%2F",
     "repository": {
         "type": "svn",
-        "url": "https://svn.development.pjats.com/repos/pja/extjs-pkg-plyr/trunk"
+        "url": "https://svn.development.pjats.com/pja/extjs-pkg-plyr/trunk"
     },
     "devDependencies": {
         "@perryjohnson/app-publisher": "^1.7.3",
