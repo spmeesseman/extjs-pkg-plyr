@@ -65,8 +65,10 @@ Ext.define('Ext.ux.Plyr',
         //
         // Non-IE
         //
-        '<audio id="player_{player.idRoot}" src="{player.url}" controls controlsList="{player.audioCtlListTags}" ' +
-        'currenttime="{player.currentTime}" style="width:100%">This browser does not support HTML 5.</audio>' : 
+        '<audio id="player_{player.idRoot}" {player.url ? \'src="\' : \'\'}{player.url}{player.url ? \'"\' : \'\'} ' +
+		    'controls controlsList="{player.audioCtlListTags}" currenttime="{player.currentTime}" style="width:100%"> ' +
+		    'This browser does not support HTML 5.' +
+		'</audio>' : 
         //
         // IE does not support HTML5 Audio Player
         //
