@@ -50,3 +50,32 @@ July 18th, 2019
     
     [closes #161]
 
+
+Version 1.2.3
+December 7th, 2019
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix
+    
+    If the bound url value is empty, an internal javascript error is thrown
+    within the plyr control.  This error is transparent to the user and does not
+    cause any issues within the application.
+    
+    [References #1147]
+
