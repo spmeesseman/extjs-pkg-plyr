@@ -58,23 +58,6 @@
     "vcTagPrefix":       "",
     "versionFiles":      "",
     "versionText":       "Version",
-    "writeLog":          "N",
-    "xRuns": [
-    {
-        "repoType":      "git",
-        "branch":        "master",
-        "repo":          "https://github.com/spmeesseman/extjs-pkg-plyr.git",
-        "homePage":      "https://github.com/spmeesseman/extjs-pkg-plyr/blob/master/README.md",
-        "bugs":          "https://github.com/spmeesseman/extjs-pkg-plyr/issues",
-        "npmRegistry":   "https://registry.npmjs.org",
-        "textEditor":    "",
-        "historyFile":   "",
-        "npmScope":      "@spmeesseman",
-        "mantisbtRelease":"N",
-        "githubRelease": "Y",
-        "githubUser":    "spmeesseman",
-        "emailNotification": "N",
-        "distRelease":   "N"
-    }]    
+    "writeLog":          "N"  
 }
 
