@@ -54,11 +54,20 @@
             "paths": ""
         },
         "resources": [
-            {
-                "path": "${package.dir}/plyr",
-                "output": "base"
-            }
-        ],
+        {
+            "path": "${package.dir}/plyr",
+            "output": "base"
+        }],
+        "css": [
+        {
+            "path": "plyr/plyr.css",
+            "includeInBundle": true
+        }],
+        "js": [
+        {
+            "path": "plyr/plyr.polyfilled.min.js",
+            "includeInBundle": true
+        }],
         "sass": {
             "namespace": "Ext",
             "etc": [
