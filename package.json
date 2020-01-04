@@ -61,14 +61,12 @@
         ],
         "css": [
             {
-                "path": "plyr/plyr.css",
-                "includeInBundle": true
+                "path": "plyr/plyr.css"
             }
         ],
         "js": [
             {
-                "path": "plyr/plyr.polyfilled.min.js",
-                "includeInBundle": true
+                "path": "plyr/plyr.polyfilled.min.js"
             }
         ],
         "sass": {
