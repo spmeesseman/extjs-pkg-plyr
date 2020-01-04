@@ -111,3 +111,31 @@ December 22nd, 2019
     
     [Closes #1311]
 
+
+Version 1.3.1
+January 4th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix
+    
+    The polyfilled player that is included as a script to build with the
+    application in v1.3.0 breaks the production build.
+    
+    [Fixes #1354]
+
