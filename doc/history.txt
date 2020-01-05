@@ -167,3 +167,29 @@ January 4th, 2020
     
     [References #1354]
 
+
+Version 1.3.3
+January 4th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix
+    
+    The change to make the latest v1.3 work in a production build has broken the
+    development build.
+
