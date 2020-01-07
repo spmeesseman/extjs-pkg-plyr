@@ -62,8 +62,6 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		console.log(2);
-
 		if (me.plyrLog) {
 			me.plyrLog("PLYR: Source change - " + v ? v : 'null', 1);
 		}
@@ -104,13 +102,9 @@ Ext.define('Ext.ux.Plyr',
 			return v;
 		}
 
-		if (!v) {
-			return v;
-		}
-
 		if (me.plyrLog) {
 			me.plyrLog("    PLYR: Update source url", 1);
-			me.plyrLog("       URL: " + v, 1);
+			me.plyrLog("       URL: " + v ? v : '', 1);
 		}
 
 		me.player.source = 
@@ -118,7 +112,7 @@ Ext.define('Ext.ux.Plyr',
 			type: 'audio',
 			sources: [
 			{
-				src: v//,
+				src: v ? v : ''//,
 				//type: 'audio/mp3',
 			}]
 		};
