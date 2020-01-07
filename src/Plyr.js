@@ -19,7 +19,8 @@ Ext.define('Ext.ux.Plyr',
 	plyrOnLoaded: Ext.emptyFn,
 	plyrOnProgress: Ext.emptyFn,
 	plyrLog: Ext.emptyFn,
-
+	plyrInitialized: false,
+	
     statics:
     {
     	imgPath: 'resources/images',
@@ -36,8 +37,7 @@ Ext.define('Ext.ux.Plyr',
         url: '',
         idRoot: 0,
         audioCtlListTags: '',
-        currentTime: 0,
-        playbackSpeed: 1
+        currentTime: 0
     },
 
     publishes:
@@ -58,14 +58,82 @@ Ext.define('Ext.ux.Plyr',
         return me.idRoot;
 	},
 	
+	updateCurrentTime: function(v)
+	{
+		var me = this;
+		
+		console.log(2);
+
+		if (me.plyrLog) {
+			me.plyrLog("PLYR: Source change - " + v ? v : 'null', 1);
+		}
+
+		if (!me.player) {
+			if (me.plyrLog) {
+				me.plyrLog("PLYR: No active player", 1);
+			}
+			return v;
+		}
+
+		if (!(v instanceof Number)) {
+			return v;
+		}
+
+		if (me.plyrLog) {
+			me.plyrLog("    PLYR: Update current time", 1);
+			me.plyrLog("       Current time: \'" + v + '\' seconds', 1);
+		}
+
+		me.player.currentTime = v;
+
+		return v;
+	},
+
+	updateUrl: function(v)
+	{
+		var me = this;
+		
+		if (me.plyrLog) {
+			me.plyrLog("PLYR: Source change - " + v ? v : 'null', 1);
+		}
+
+		if (!me.player) {
+			if (me.plyrLog) {
+				me.plyrLog("PLYR: No active player", 1);
+			}
+			return v;
+		}
+
+		if (!v) {
+			return v;
+		}
+
+		if (me.plyrLog) {
+			me.plyrLog("    PLYR: Update source url", 1);
+			me.plyrLog("       URL: " + v, 1);
+		}
+
+		me.player.source = 
+		{
+			type: 'audio',
+			sources: [
+			{
+				src: v//,
+				//type: 'audio/mp3',
+			}]
+		};
+
+		return v;
+	},
+
 	bind:
     {
         html: !Ext.isIE ? 
         //
         // Non-IE
         //
-        '<audio id="player_{player.idRoot}" {player.url ? \'src="\' : \'\'}{player.url}{player.url ? \'"\' : \'\'} ' +
-		    'controls controlsList="{player.audioCtlListTags}" currenttime="{player.currentTime}" style="width:100%"> ' +
+        '<audio id="player_{player.idRoot}" ' +
+		    'controls controlsList="{player.audioCtlListTags}" style="width:100%"> ' +
 		    'This browser does not support HTML 5.' +
 		'</audio>' : 
         //
@@ -114,7 +182,40 @@ Ext.define('Ext.ux.Plyr',
     //     off(event, function)	    String, Function	Remove an event listener for the specified event.
     //     supports(type)	        String	Check support for a mime type.
 	//
-
+	// List of available Getters and Setters
+	//
+	//     Prop     Get Set Description
+	//
+	//     isHTML5	✓	-	Returns a boolean indicating if the current player is HTML5.
+    //     isEmbed	✓	-	Returns a boolean indicating if the current player is an embedded player.
+    //     playing	✓	-	Returns a boolean indicating if the current player is playing.
+    //     paused	✓	-	Returns a boolean indicating if the current player is paused.
+    //     stopped	✓	-	Returns a boolean indicating if the current player is stopped.
+    //     ended	✓	-	Returns a boolean indicating if the current player has finished playback.
+    //     buffered	✓	-	Returns a float between 0 and 1 indicating how much of the media is buffered
+    //     currentTime	✓	✓	Gets or sets the currentTime for the player. The setter accepts a float in seconds.
+    //     seeking	✓	-	Returns a boolean indicating if the current player is seeking.
+    //     duration	✓	-	Returns the duration for the current media.
+    //     volume	✓	✓	Gets or sets the volume for the player. The setter accepts a float between 0 and 1.
+    //     muted	✓	✓	Gets or sets the muted state of the player. The setter accepts a boolean.
+    //     hasAudio	✓	-	Returns a boolean indicating if the current media has an audio track.
+    //     speed	✓	✓	Gets or sets the speed for the player. The setter accepts a value in the options specified in your config. Generally the minimum should be 0.5.
+    //     quality¹	✓	✓	Gets or sets the quality for the player. The setter accepts a value from the options specified in your config.
+    //     loop	    ✓	✓	Gets or sets the current loop state of the player. The setter accepts a boolean.
+    //     source	✓	✓	Gets or sets the current source for the player. The setter accepts an object. See source setter below for examples.
+    //     poster	✓	✓	Gets or sets the current poster image for the player. The setter accepts a string; the URL for the updated poster image.
+    //     autoplay	✓	✓	Gets or sets the autoplay state of the player. The setter accepts a boolean.
+    //     currentTrack	✓	✓	Gets or sets the caption track by index. -1 means the track is missing or captions is not active
+	//     language	✓	✓	Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for 
+	//                       the languages is dependent on the captions you include. If your captions don't have any language data, or if you have multiple 
+	//                       tracks with the same language, you may want to use currentTrack instead.
+	//     pip	    ✓	✓	Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This currently only supported on Safari
+	//                       10+ (on MacOS Sierra+ and iOS 10+) and Chrome 70+.
+    //     ratio	✓	✓	Gets or sets the video aspect ratio. The setter accepts a string in the same format as the ratio option.
+	//     download	✓	✓	Gets or sets the URL for the download button. The setter accepts a string containing a valid absolute URL.
+	//     fullscreen.active    ✓	-	Returns a boolean indicating if the current player is in fullscreen mode.
+    //     fullscreen.enabled	✓	-	Returns a boolean indicating if the current player has fullscreen enabled.
+    //
 
 	taskRunner: null,
 	taskRunnerTask: null,
@@ -332,6 +433,7 @@ Ext.define('Ext.ux.Plyr',
     {
     	var me = this;
     	me.callParent(arguments);
+		me.plyrInitialized = false;
 
 		Ext.create('Ext.util.DelayedTask', function()
 		{
@@ -388,7 +490,8 @@ Ext.define('Ext.ux.Plyr',
 		//	// If using the default controls are used then you can specify which settings to show in the menu
 		//	settings: ['captions', 'quality', 'speed', 'loop'],
 		//	keyboard: { focused: true, global: false }, // Enable keyboard shortcuts for focused players only or globally
-		//	tooltips: { controls: false, seek: true },  // Display control labels as tooltips on :hover & :focus (by default, the labels are screen reader only). seek: Display a seek tooltip to indicate on click where the media would seek to.
+		//	tooltips: { controls: false, seek: true },  // Display control labels as tooltips on :hover & :focus (by default, the labels 
+		//            are screen reader only). seek: Display a seek tooltip to indicate on click where the media would seek to.
 		//	storage:  { enabled: true, key: 'plyr' },   // enabled: Allow use of local storage to store user settings. key: The key name to use.
 		//	captions: { active: false, language: 'auto', update: false },
 		//	speed:    { selected: 1, options: [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2] }
@@ -418,20 +521,39 @@ Ext.define('Ext.ux.Plyr',
 			// count up instead of down
 			invertTime: false,
 			// show duration
-			controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 
-			           'captions', 'settings', 'pip', 'airplay', 'fullscreen', 'duration']
+			controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 
+			           'pip', 'airplay', 'fullscreen', 'duration', 'restart', 'rewind', 'fast-forward' ]
 		};
 
 		me.player = new Plyr('#' + me.playerId, opts2);
-		//me.player = new Plyr('#' + me.playerId);
-		//me.player.play();
-		//me.player.pause();
-		
-		me.player.on('ready', function(e) {
+
+		if (me.getUrl())
+		{
+			me.player.source = 
+			{
+				type: 'audio',
+				sources: [
+				{
+					src: me.getUrl()//,
+					//type: 'audio/mp3',
+				}]
+			};
+		}
+
+		me.player.on('ready', function(e) 
+		{
 			if (me.plyrLog) {
 				me.plyrLog("    Player initialized", 1);
 				me.plyrLog("       ID: " + me.playerId, 1);
 			}
+
+			if (me.getCurrentTime())
+			{
+				me.player.currentTime = me.getCurrentTime();
+			}
+
+			me.plyrInitialized = true;
+
 			if (me.plyrOnLoaded) {
 				if (me.plyrOnLoaded instanceof Function) {
 					me.plyrOnLoaded(me.playerId, me.player);
@@ -450,7 +572,8 @@ Ext.define('Ext.ux.Plyr',
 			}
 		});
 
-		me.player.on('progress', function(e) {
+		me.player.on('progress', function(e) 
+		{
 			if (me.plyrLog) {
 				me.plyrLog("    Player progress", 1);
 				me.plyrLog("       ID: " + me.playerId, 1);
