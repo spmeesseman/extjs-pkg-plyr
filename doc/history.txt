@@ -250,3 +250,31 @@ January 6th, 2020
     When resetting the audio to an empty url, or a url to an audio file that
     does not exist, the previously loaded audio remains loaded.
 
+
+Version 1.3.6
+January 13th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix:  ExtJS Wrapper
+    
+    Setting the current time of the player via the config property 'currentTime'
+    throws a javascript exception.
+    
+    [Fixes #1427]
+

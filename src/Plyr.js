@@ -5,8 +5,13 @@ Ext.define('Ext.ux.Plyr',
 	
 	player: null,
 	playerId: null,
-    plyrInitialized: false,
-    intializationInProgress: 0,
+	plyrInitialProgress: false,
+    plyrOnLoaded: Ext.emptyFn,
+	plyrOnProgress: Ext.emptyFn,
+	plyrLog: Ext.emptyFn,
+	plyrInitialized: false,
+	intializationInProgress: 0,
+	
     reference: 'player',
     autoHeight: true,
     border:false,
@@ -16,11 +21,6 @@ Ext.define('Ext.ux.Plyr',
     	border: '0'
     },
 
-	plyrOnLoaded: Ext.emptyFn,
-	plyrOnProgress: Ext.emptyFn,
-	plyrLog: Ext.emptyFn,
-	plyrInitialized: false,
-	
     statics:
     {
     	imgPath: 'resources/images',
@@ -63,7 +63,7 @@ Ext.define('Ext.ux.Plyr',
 		var me = this;
 		
 		if (me.plyrLog) {
-			me.plyrLog("PLYR: Source change - " + v ? v : 'null', 1);
+			me.plyrLog("PLYR: CurrentTime change - " + (v ? v : 'null'), 1);
 		}
 
 		if (!me.player) {
@@ -92,7 +92,7 @@ Ext.define('Ext.ux.Plyr',
 		var me = this;
 		
 		if (me.plyrLog) {
-			me.plyrLog("PLYR: Source change - " + v ? v : 'null', 1);
+			me.plyrLog("PLYR: Source change - " + (v ? v : 'null'), 1);
 		}
 
 		if (!me.player) {
@@ -541,11 +541,6 @@ Ext.define('Ext.ux.Plyr',
 				me.plyrLog("       ID: " + me.playerId, 1);
 			}
 
-			if (me.getCurrentTime())
-			{
-				me.player.currentTime = me.getCurrentTime();
-			}
-
 			me.plyrInitialized = true;
 
 			if (me.plyrOnLoaded) {
@@ -572,7 +567,18 @@ Ext.define('Ext.ux.Plyr',
 				me.plyrLog("    Player progress", 1);
 				me.plyrLog("       ID: " + me.playerId, 1);
 			}
-			if (me.plyrOnProgress) {
+
+			if (!me.plyrInitialProgress && me.getCurrentTime())
+			{
+				Ext.create('Ext.util.DelayedTask', function() {
+					me.player.currentTime = me.getCurrentTime();
+				}).delay(100);
+			}
+
+			me.plyrInitialProgress = true;
+
+			if (me.plyrOnProgress) 
+			{
 				if (me.plyrOnProgress instanceof Function) {
 					me.plyrOnProgress(me.playerId, me.player);
 				}
