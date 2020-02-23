@@ -278,3 +278,45 @@ January 13th, 2020
     
     [Fixes #1427]
 
+
+Version 1.4.0
+February 23rd, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add support for video player.
+    
+    To use the video player when instantiating the Ext.plyr.Plyr component, as
+    opposed to the audio player, set the 'plrType' config property to a string
+    type value of 'video', for example:
+    
+        {
+            xtype: 'plyr',
+            plyrType: 'video',
+            url: 'path/to/my/video.mp4'
+        }
+
+    Defaults to 'audio'.  Property is bindable.  Note the url specified by the
+    'url' config property must point to a valid MPEG, MP3, or YouTube video URL.
+
+2.  Documentation:  ReadMe
+    
+    Update badges.
+
