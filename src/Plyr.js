@@ -37,7 +37,8 @@ Ext.define('Ext.ux.Plyr',
         url: '',
         idRoot: 0,
         audioCtlListTags: '',
-        currentTime: 0
+		currentTime: 0,
+		plyrType: 'audio' // or 'video'
     },
 
     publishes:
@@ -45,7 +46,8 @@ Ext.define('Ext.ux.Plyr',
         url: true,
         idRoot: true,
         audioCtlListTags: true,
-        currentTime: true
+		currentTime: true,
+		plyrType: true
     },
 
     getIdRoot: function()
@@ -126,10 +128,10 @@ Ext.define('Ext.ux.Plyr',
         //
         // Non-IE
         //
-        '<audio id="player_{player.idRoot}" ' +
+        '<{player.plyrType} id="player_{player.idRoot}" ' +
 		    'controls controlsList="{player.audioCtlListTags}" style="width:100%"> ' +
 		    'This browser does not support HTML 5.' +
-		'</audio>' : 
+		'</{player.plyrType}>' : 
         //
         // IE does not support HTML5 Audio Player
         //
