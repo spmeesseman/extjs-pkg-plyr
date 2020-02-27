@@ -1,6 +1,6 @@
 Ext.define('Ext.ux.Plyr', 
 {
-    extend: 'Ext.Component',
+    extend: 'Ext.Container',
     xtype: 'plyr',
 	
 	player: null,
@@ -11,10 +11,11 @@ Ext.define('Ext.ux.Plyr',
 	plyrLog: Ext.emptyFn,
 	plyrInitialized: false,
 	intializationInProgress: 0,
-	
+	idRoot: 0,
     reference: 'player',
     autoHeight: true,
-    border:false,
+	border:false,
+	layout: 'fit',
     style: 
     {
     	padding: '0 0 0 0',
@@ -35,7 +36,6 @@ Ext.define('Ext.ux.Plyr',
     config:
     {
         url: '',
-        idRoot: 0,
         audioCtlListTags: '',
 		currentTime: 0,
 		plyrType: 'audio' // or 'video'
@@ -44,7 +44,6 @@ Ext.define('Ext.ux.Plyr',
     publishes:
     {
         url: true,
-        idRoot: true,
         audioCtlListTags: true,
 		currentTime: true,
 		plyrType: true
@@ -111,7 +110,7 @@ Ext.define('Ext.ux.Plyr',
 
 		me.player.source = 
 		{
-			type: 'audio',
+			type: me.getPlyrType(),
 			sources: [
 			{
 				src: v ? v : ''//,
@@ -122,26 +121,26 @@ Ext.define('Ext.ux.Plyr',
 		return v;
 	},
 
-	bind:
-    {
-        html: !Ext.isIE ? 
-        //
-        // Non-IE
-        //
-        '<{player.plyrType} id="player_{player.idRoot}" ' +
-		    'controls controlsList="{player.audioCtlListTags}" style="width:100%"> ' +
-		    'This browser does not support HTML 5.' +
-		'</{player.plyrType}>' : 
-        //
-        // IE does not support HTML5 Audio Player
-        //
-        '<object id="player_{player.idRoot}" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
-            'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
-            '<param name="src" value="{player.url}">' +
-            '<param name="autoplay" value="false">' +
-            '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
-        '</object>'
-	},
+	//bind:
+    //{
+    //    html: !Ext.isIE ? 
+    //    //
+    //    // Non-IE
+    //    //
+    //    '<{player.plyrType} id="player_{player.idRoot}" ' +
+	//	    'controls controlsList="{player.audioCtlListTags}" style="width:100%"> ' +
+	//	    'This browser does not support HTML 5.' +
+	//	'</{player.plyrType}>' : 
+    //    //
+    //    // IE does not support HTML5 Audio Player
+    //    //
+    //    '<object id="player_{player.idRoot}" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
+    //        'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
+    //        '<param name="src" value="{player.url}">' +
+    //        '<param name="autoplay" value="false">' +
+    //        '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
+    //    '</object>'
+	//},
 	
 	listeners:
 	{
@@ -424,6 +423,27 @@ Ext.define('Ext.ux.Plyr',
 		}
 	},
 
+	
+	initComponent: function() 
+    {
+    	var me = this;
+
+		me.html = !Ext.isIE ? '<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+						'controls controlsList="' + me.getAudioCtlListTags() + '" style="width:100%"> ' +
+						'This browser does not support HTML 5.' +
+					'</' + me.getPlyrType() + '>' : 
+					//
+					// IE does not support HTML5 Audio Player
+					//
+					'<object id="player_' + me.getIdRoot() + '" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
+						'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
+						'<param name="src" value="' + me.getUrl() + '">' +
+						'<param name="autoplay" value="false">' +
+						'<embed type="audio/x-wav" src="' + me.getUrl() + '" autoplay="false" autostart="false" width="100%" height="50">' +
+					'</object>';
+		me.callParent(arguments);
+	},
+
 
 	afterRender: function() 
     {
@@ -527,7 +547,7 @@ Ext.define('Ext.ux.Plyr',
 		{
 			me.player.source = 
 			{
-				type: 'audio',
+				type: me.getPlyrType(),
 				sources: [
 				{
 					src: me.getUrl()//,
