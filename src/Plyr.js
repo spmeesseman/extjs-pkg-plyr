@@ -10,6 +10,7 @@ Ext.define('Ext.ux.Plyr',
 	plyrOnProgress: Ext.emptyFn,
 	plyrLog: Ext.emptyFn,
 	plyrInitialized: false,
+	plyrHTML5: true,
 	intializationInProgress: 0,
 	idRoot: 0,
     reference: 'player',
@@ -123,7 +124,7 @@ Ext.define('Ext.ux.Plyr',
 
 	//bind:
     //{
-    //    html: !Ext.isIE ? 
+    //    html: !me.plyrHTML5 ? 
     //    //
     //    // Non-IE
     //    //
@@ -147,7 +148,7 @@ Ext.define('Ext.ux.Plyr',
 		destroy: function(cmp, eopts)
 		{
 			var me = this;
-			if (me.player) {
+			if (me.player && me.player.destroy) {
 				me.player.destroy();
 			}
 		}
@@ -235,7 +236,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.forward(seconds);
+		if (me.plyrHTML5 !== false) {
+			me.player.forward(seconds);
+		}
+		else {
+			me.player.controls.forward(seconds);
+		}
 	},
 
 
@@ -268,7 +274,12 @@ Ext.define('Ext.ux.Plyr',
 		me.taskRunnerTask = me.taskRunner.start({
 			run: function()
 			{
-				me.player.forward(seconds);
+				if (me.plyrHTML5 !== false) {
+					me.player.forward(seconds);
+				}
+				else {
+					me.player.controls.forward(seconds);
+				}
 			},
 			interval: stepms ? stepms : 500
 		});
@@ -309,7 +320,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.pause();
+		if (me.plyrHTML5 !== false) {
+			me.player.pause();
+		}
+		else {
+			me.player.controls.pause();
+		}
 	},
 
 
@@ -329,7 +345,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.play();
+		if (me.plyrHTML5 !== false) {
+			me.player.play();
+		}
+		else {
+			me.player.controls.play();
+		}
 	},
 
 
@@ -349,7 +370,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.togglePlay();
+		if (me.plyrHTML5 !== false) {
+			me.player.togglePlay();
+		}
+		else {
+			me.player.controls.togglePlay();
+		}
 	},
 
 
@@ -373,7 +399,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.rewind(seconds);
+		if (me.plyrHTML5 !== false) {
+			me.player.rewind(seconds);
+		}
+		else {
+			me.player.controls.rewind(seconds);
+		}
 	},
 
 
@@ -393,7 +424,12 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.rewind(seconds);
+		if (me.plyrHTML5 !== false) {
+			me.player.rewind(seconds);
+		}
+		else {
+			me.player.controls.rewind(seconds);
+		}
 
 		///
 		// TODO - this should actually use a webworker in the case the browser window
@@ -428,18 +464,24 @@ Ext.define('Ext.ux.Plyr',
     {
     	var me = this;
 
-		me.html = !Ext.isIE ? '<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+		me.plyrHTML5 = !Ext.isIE;
+
+		me.html = me.plyrHTML5 ? '<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
 						'controls controlsList="' + me.getAudioCtlListTags() + '" style="width:100%"> ' +
 						'This browser does not support HTML 5.' +
 					'</' + me.getPlyrType() + '>' : 
 					//
 					// IE does not support HTML5 Audio Player
 					//
-					'<object id="player_' + me.getIdRoot() + '" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
-						'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
-						'<param name="src" value="' + me.getUrl() + '">' +
-						'<param name="autoplay" value="false">' +
-						'<embed type="audio/x-wav" src="' + me.getUrl() + '" autoplay="false" autostart="false" width="100%" height="50">' +
+					'<object id="player_' + me.getIdRoot() + '" classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' +
+						'type="application/x-oleobject" width="100%" height="50">' +
+						'<param name="autostart" value="false">' +
+						'<param name="balance"   value="0">' +
+						'<param name="enabled"   value="true">' +
+						'<param name="url"       value="' + me.getUrl() + '">' +
+						'<param name="volume"    value="100">' +
+						'<param name="showstatusbar"   value="true">' +
+						'<param name="currentposition" value="' + me.getCurrentTime() + '">' +
 					'</object>';
 		me.callParent(arguments);
 	},
@@ -466,10 +508,18 @@ Ext.define('Ext.ux.Plyr',
 			me.plyrLog("", 1);
 		}
 
-		if (Ext.isIE) {
+		if (!me.plyrHTML5)
+		{
 			if (me.plyrLog) {
-				me.plyrLog("HTML5 audio is not supported in IE.  Fall back to apple/qtplugin", 1);
+				me.plyrLog("Loading Plyr Fallback Media Player", 1);
+				me.plyrLog("   Is IE: " + Ext.isIE.toString(), 1);
 			}
+			me.player = document[me.playerId];
+			if (me.player && me.getUrl())
+			{
+				me.player.URL = me.getUrl();
+			}
+
 			return;
 		}
 
