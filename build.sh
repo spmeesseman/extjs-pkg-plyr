@@ -10,6 +10,8 @@ fi
 
 echo "Copying Plyr dist to local package dir"
 cp -f $PLYRDIR/dist/* plyr
+rm -f plyr/*.mjs
+rm -f plyr/*.map
 
 #
 # Apply more speed settings
