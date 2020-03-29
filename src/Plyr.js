@@ -240,7 +240,11 @@ Ext.define('Ext.ux.Plyr',
 			me.player.forward(seconds);
 		}
 		else {
-			me.player.controls.forward(seconds);
+			me.player.controls.fastForward();
+			Ext.create('Ext.util.DelayedTask', function()
+			{
+				me.player.controls.play();
+			}, me).delay(seconds * 1000);
 		}
 	},
 
@@ -261,28 +265,33 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		me.player.forward(seconds);
+		if (me.plyrHTML5 !== false) {
+			me.player.forward(seconds);
 
-		//
-		// TODO - this should actually use a webworker in the case the browser window
-		// loses focus or is not the active window
-		//
-		if (!me.taskRunner) {
-			me.taskRunner = new Ext.util.TaskRunner();	
+			//
+			// TODO - this should actually use a webworker in the case the browser window
+			// loses focus or is not the active window
+			//
+			if (!me.taskRunner) {
+				me.taskRunner = new Ext.util.TaskRunner();	
+			}
+	
+			me.taskRunnerTask = me.taskRunner.start({
+				run: function()
+				{
+					if (me.plyrHTML5 !== false) {
+						me.player.forward(seconds);
+					}
+					else {
+						me.player.controls.fastForward(seconds);
+					}
+				},
+				interval: stepms ? stepms : 500
+			});
 		}
-
-		me.taskRunnerTask = me.taskRunner.start({
-			run: function()
-			{
-				if (me.plyrHTML5 !== false) {
-					me.player.forward(seconds);
-				}
-				else {
-					me.player.controls.forward(seconds);
-				}
-			},
-			interval: stepms ? stepms : 500
-		});
+		else {
+			me.player.controls.fastForward();
+		}
 	},
 
 
@@ -374,7 +383,7 @@ Ext.define('Ext.ux.Plyr',
 			me.player.togglePlay();
 		}
 		else {
-			me.player.controls.togglePlay();
+			me.player.controls.playItem();
 		}
 	},
 
@@ -403,7 +412,11 @@ Ext.define('Ext.ux.Plyr',
 			me.player.rewind(seconds);
 		}
 		else {
-			me.player.controls.rewind(seconds);
+			me.player.controls.fastReverse();
+			Ext.create('Ext.util.DelayedTask', function()
+			{
+				me.player.controls.play();
+			}, me).delay(seconds * 1000);
 		}
 	},
 
@@ -424,38 +437,44 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
-		if (me.plyrHTML5 !== false) {
+		if (me.plyrHTML5 !== false)
+		{
 			me.player.rewind(seconds);
+
+			///
+			// TODO - this should actually use a webworker in the case the browser window
+			// loses focus or is not the active window
+			//
+			if (!me.taskRunner) {
+				me.taskRunner = new Ext.util.TaskRunner();	
+			}
+	
+			me.taskRunnerTask = me.taskRunner.start({
+				run: function()
+				{
+					me.player.rewind(seconds);
+				},
+				interval: stepms ? stepms : 500
+			});
 		}
 		else {
-			me.player.controls.rewind(seconds);
+			me.player.controls.fastReverse();
 		}
-
-		///
-		// TODO - this should actually use a webworker in the case the browser window
-		// loses focus or is not the active window
-		//
-		if (!me.taskRunner) {
-			me.taskRunner = new Ext.util.TaskRunner();	
-		}
-
-		me.taskRunnerTask = me.taskRunner.start({
-			run: function()
-			{
-				me.player.rewind(seconds);
-			},
-			interval: stepms ? stepms : 500
-		});
 	},
 
 
 	stopTaskRunner: function()
 	{
 		var me = this;
-		if (me.taskRunner && me.taskRunnerTask)
-		{
-			me.taskRunner.stop(me.taskRunnerTask, true);
-			me.taskRunnerTask = null;
+		if (me.plyrHTML5 !== false) {
+			if (me.taskRunner && me.taskRunnerTask)
+			{
+				me.taskRunner.stop(me.taskRunnerTask, true);
+				me.taskRunnerTask = null;
+			}
+		}
+		else {
+			me.player.controls.play();
 		}
 	},
 
