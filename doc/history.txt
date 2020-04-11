@@ -375,3 +375,44 @@ March 5th, 2020
     
         Content has been downloaded from an insecure source
 
+
+Version 1.5.0
+April 11th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add initial support for IE embedded object audio player control.  Play/pause
+    support only at this time.
+
+2.  Build System
+    
+    Add the NodeJS dependency to header template history file.
+
+3.  Build System
+    
+    Remove all .mjs and .map files from release.
+
+4.  Documentation
+    
+    Add JDoc header tags for future documentation parsing by the new docs tool
+    docs-generator.
+
