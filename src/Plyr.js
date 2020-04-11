@@ -1,3 +1,7 @@
+/**
+ * @class Ext.ux.Plyr
+ * 
+ */
 Ext.define('Ext.ux.Plyr', 
 {
     extend: 'Ext.Container',
