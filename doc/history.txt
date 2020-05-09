@@ -416,3 +416,56 @@ April 11th, 2020
     Add JDoc header tags for future documentation parsing by the new docs tool
     docs-generator.
 
+
+Version 1.6.0
+May 8th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature:  Ext.ux.Plyr
+
+    Add component level configs to enable relaying of all 'plyr' media events by
+    way of hook functions:
+    
+        onCanPlay
+        onCanPlayThrough
+        onLoadStart
+        onLoadFinished
+        onProgress
+        onReady:
+        onStalled
+        onWaiting
+    
+    The 'onLoadStart' and 'onLoadFInished' events can reliably be used to
+    determine when media has started to load, and when it is finished loading, so
+    as to disable/enable the UI as needed when the media is loading.
+
+    All new hook functions share the same parameterless prototype.
+
+2.  Bug Fix
+    
+    Randomly, when an initial audio postion is set via the component config, it
+    is not set properly when the media is loaded.  It seems to work 4 out of 5
+    times, and is a timing issue.
+
+3.  Visual Enhancement
+    
+    Include theme based sass for styling of both audio and video player.
+
