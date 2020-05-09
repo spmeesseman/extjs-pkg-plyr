@@ -1,22 +1,8 @@
-/**
- * @class Ext.ux.Plyr
- * 
- */
 Ext.define('Ext.ux.Plyr', 
 {
     extend: 'Ext.Container',
-    xtype: 'plyr',
+	xtype: 'plyr',
 	
-	player: null,
-	playerId: null,
-	plyrInitialProgress: false,
-    plyrOnLoaded: Ext.emptyFn,
-	plyrOnProgress: Ext.emptyFn,
-	plyrLog: Ext.emptyFn,
-	plyrInitialized: false,
-	plyrHTML5: true,
-	intializationInProgress: 0,
-	idRoot: 0,
     reference: 'player',
     autoHeight: true,
 	border:false,
@@ -27,23 +13,128 @@ Ext.define('Ext.ux.Plyr',
     	border: '0'
     },
 
+	/**
+	 * @deprecated 1.4.3 Use {@link Ext.ux.Plyr#onCanPlay}
+	 */
+	plyrInitialProgress: false,
+    /**
+	 * @deprecated 1.4.3 Use {@link Ext.ux.Plyr#onLoadFinished}
+	 */
+	plyrOnLoaded: Ext.emptyFn,
+	/**
+	 * @deprecated 1.4.3 Use {@link Ext.ux.Plyr#onProgress}
+	 */
+	plyrOnProgress: Ext.emptyFn,
+	/**
+	 * @deprecated 1.4.3 Use {@link Ext.ux.Plyr#onReady}
+	 */
+	plyrInitialized: false,
+
+	/**
+	 * @property {Object} player
+	 */
+	player: null,
+	/**
+	 * @property {String} playerId
+	 */
+	playerId: null,
+	/**
+	 * @property {Boolean} plyrHTML5
+	 */
+	plyrHTML5: true,
+	/**
+	 * @property {Boolean} intializationInProgress
+	 */
+	intializationInProgress: 0,
+
+	privates:
+    {
+		taskRunner: null,
+		taskRunnerTask: null,
+		idRoot: 0,
+        logTag: '[Plyr]',
+		logTagColor: '#2b06d1',
+		loading: 0
+	},
+	
     statics:
     {
-    	imgPath: 'resources/images',
-		playerIdCounter: 0,
-    	captureActivity: 
-    	{
-    		fn: Ext.emptyFn,
-    		scope: null
-    	}
+    	playerIdCounter: 0
     },
 
     config:
     {
-        url: '',
-        audioCtlListTags: '',
+		/**
+		 * @cfg {String} audioCtlListTags
+		 */
+		audioCtlListTags: '',
+		/**
+		 * @cfg {Object|Function} captureActivity
+		 */
+		captureActivity: {
+    		fn: Ext.emptyFn,
+    		scope: null
+    	},
+        /**
+		 * @cfg {Number} currentTime
+		 */
 		currentTime: 0,
-		plyrType: 'audio' // or 'video'
+		/**
+		 * @cfg {Function} onCanPlay
+		 * @since 1.4.3
+		 */
+		onCanPlay: null,
+		/**
+		 * @cfg {Function} onCanPlayThrough
+		 * @since 1.4.3
+		 */
+		onCanPlayThrough: null,
+		/**
+		 * @cfg {Function} onLoadStart
+		 * @since 1.4.3
+		 */
+		onLoadStart: null,
+		/**
+		 * @cfg {Function} onLoadFinished
+		 * @since 1.4.3
+		 */
+		onLoadFinished: null,
+		/**
+		 * @cfg {Function} onProgress
+		 * @since 1.4.3
+		 */
+		onProgress: null,
+		/**
+		 * @cfg {Function} onReady
+		 * @since 1.4.3
+		 */
+		onReady: null,
+		/**
+		 * @cfg {Function} onStalled
+		 * @since 1.4.3
+		 */
+		onStalled: null,
+		/**
+		 * @cfg {Function} onWaiting
+		 * @since 1.4.3
+		 */
+		onWaiting: null,
+		/**
+		 * @cfg {Function} plyrLog
+		 */
+		plyrLog: null,
+		/**
+		 * @cfg {Function} plyrLogValue
+		 */
+		plyrLogValue: null,
+		/**
+		 * @cfg {String} plyrType
+		 */
+		plyrType: 'audio',  // or 'video'
+        /**
+		 * @cfg {String} url
+		 */
+		url: ''
     },
 
     publishes:
@@ -53,6 +144,18 @@ Ext.define('Ext.ux.Plyr',
 		currentTime: true,
 		plyrType: true
     },
+	
+	listeners:
+	{
+		beforedestroy: function(cmp, eopts)
+		{
+			var me = this;
+			if (me.player && me.player.destroy) {
+				me.player.destroy();
+			}
+		}
+	},
+
 
     getIdRoot: function()
     {
@@ -64,18 +167,21 @@ Ext.define('Ext.ux.Plyr',
         return me.idRoot;
 	},
 	
+
+	isLoading: function()
+	{
+		return this.loading;
+	},
+
+
 	updateCurrentTime: function(v)
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: CurrentTime change - " + (v ? v : 'null'), 1);
-		}
+		me.logCustom("CurrentTime change - " + (v ? v : 'null'), 1);
 
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return v;
 		}
 
@@ -83,35 +189,28 @@ Ext.define('Ext.ux.Plyr',
 			return v;
 		}
 
-		if (me.plyrLog) {
-			me.plyrLog("    PLYR: Update current time", 1);
-			me.plyrLog("       Current time: \'" + v + '\' seconds', 1);
-		}
+		me.logCustom("   Update current time", 1);
+		me.logCustom("      Current time: \'" + v + '\' seconds', 1);
 
 		me.player.currentTime = v;
 
 		return v;
 	},
 
+
 	updateUrl: function(v)
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Source change - " + (v ? v : 'null'), 1);
-		}
+		me.logCustom("Source change - " + (v ? v : 'null'), 1);
 
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return v;
 		}
 
-		if (me.plyrLog) {
-			me.plyrLog("    PLYR: Update source url", 1);
-			me.plyrLog("       URL: " + v ? v : '', 1);
-		}
+		me.logCustom("   Update source url", 1);
+		me.logCustom("      URL: " + v ? v : '', 1);
 
 		me.player.source = 
 		{
@@ -125,6 +224,7 @@ Ext.define('Ext.ux.Plyr',
 
 		return v;
 	},
+
 
 	//bind:
     //{
@@ -146,17 +246,6 @@ Ext.define('Ext.ux.Plyr',
     //        '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
     //    '</object>'
 	//},
-	
-	listeners:
-	{
-		destroy: function(cmp, eopts)
-		{
-			var me = this;
-			if (me.player && me.player.destroy) {
-				me.player.destroy();
-			}
-		}
-	},
 
 	//
 	// List of available plyr API methods:
@@ -217,20 +306,14 @@ Ext.define('Ext.ux.Plyr',
     //     fullscreen.enabled	✓	-	Returns a boolean indicating if the current player has fullscreen enabled.
     //
 
-	taskRunner: null,
-	taskRunnerTask: null,
-
 	ffwd: function(seconds)
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Fast Forward", 1);
-		}
+		me.logCustom("Command received - Fast Forward", 1);
+
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -244,11 +327,7 @@ Ext.define('Ext.ux.Plyr',
 			me.player.forward(seconds);
 		}
 		else {
-			me.player.controls.fastForward();
-			Ext.create('Ext.util.DelayedTask', function()
-			{
-				me.player.controls.play();
-			}, me).delay(seconds * 1000);
+			me.player.controls.forward(seconds);
 		}
 	},
 
@@ -257,45 +336,36 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Fast Forward Start", 1);
-		}
+		me.logCustom("Command received - Fast Forward Start", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
 		me.stopTaskRunner();
 
-		if (me.plyrHTML5 !== false) {
-			me.player.forward(seconds);
+		me.player.forward(seconds);
 
-			//
-			// TODO - this should actually use a webworker in the case the browser window
-			// loses focus or is not the active window
-			//
-			if (!me.taskRunner) {
-				me.taskRunner = new Ext.util.TaskRunner();	
-			}
-	
-			me.taskRunnerTask = me.taskRunner.start({
-				run: function()
-				{
-					if (me.plyrHTML5 !== false) {
-						me.player.forward(seconds);
-					}
-					else {
-						me.player.controls.fastForward(seconds);
-					}
-				},
-				interval: stepms ? stepms : 500
-			});
+		//
+		// TODO - this should actually use a webworker in the case the browser window
+		// loses focus or is not the active window
+		//
+		if (!me.taskRunner) {
+			me.taskRunner = new Ext.util.TaskRunner();	
 		}
-		else {
-			me.player.controls.fastForward();
-		}
+
+		me.taskRunnerTask = me.taskRunner.start({
+			run: function()
+			{
+				if (me.plyrHTML5 !== false) {
+					me.player.forward(seconds);
+				}
+				else {
+					me.player.controls.forward(seconds);
+				}
+			},
+			interval: stepms ? stepms : 500
+		});
 	},
 
 
@@ -303,13 +373,10 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Fast Forward / Rewind Stop", 1);
-		}
+		me.logCustom("Command received - Fast Forward / Rewind Stop", 1);
+
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -321,13 +388,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Resume", 1);
-		}
+		me.logCustom("Command received - Resume", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -346,13 +409,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Resume", 1);
-		}
+		me.logCustom("Command received - Resume", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -371,13 +430,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Play/Pause", 1);
-		}
+		me.logCustom("Command received - Play/Pause", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -387,7 +442,7 @@ Ext.define('Ext.ux.Plyr',
 			me.player.togglePlay();
 		}
 		else {
-			me.player.controls.playItem();
+			me.player.controls.togglePlay();
 		}
 	},
 
@@ -396,13 +451,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Rewind", 1);
-		}
+		me.logCustom("Command received - Rewind", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
@@ -416,11 +467,7 @@ Ext.define('Ext.ux.Plyr',
 			me.player.rewind(seconds);
 		}
 		else {
-			me.player.controls.fastReverse();
-			Ext.create('Ext.util.DelayedTask', function()
-			{
-				me.player.controls.play();
-			}, me).delay(seconds * 1000);
+			me.player.controls.rewind(seconds);
 		}
 	},
 
@@ -429,56 +476,46 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		if (me.plyrLog) {
-			me.plyrLog("PLYR: Command received - Fast Forward", 1);
-		}
+		me.logCustom("Command received - Fast Forward", 1);
 		if (!me.player) {
-			if (me.plyrLog) {
-				me.plyrLog("PLYR: No active player", 1);
-			}
+			me.logCustom("No active player", 1);
 			return;
 		}
 
 		me.stopTaskRunner();
 
-		if (me.plyrHTML5 !== false)
-		{
+		if (me.plyrHTML5 !== false) {
 			me.player.rewind(seconds);
-
-			///
-			// TODO - this should actually use a webworker in the case the browser window
-			// loses focus or is not the active window
-			//
-			if (!me.taskRunner) {
-				me.taskRunner = new Ext.util.TaskRunner();	
-			}
-	
-			me.taskRunnerTask = me.taskRunner.start({
-				run: function()
-				{
-					me.player.rewind(seconds);
-				},
-				interval: stepms ? stepms : 500
-			});
 		}
 		else {
-			me.player.controls.fastReverse();
+			me.player.controls.rewind(seconds);
 		}
+
+		///
+		// TODO - this should actually use a webworker in the case the browser window
+		// loses focus or is not the active window
+		//
+		if (!me.taskRunner) {
+			me.taskRunner = new Ext.util.TaskRunner();	
+		}
+
+		me.taskRunnerTask = me.taskRunner.start({
+			run: function()
+			{
+				me.player.rewind(seconds);
+			},
+			interval: stepms ? stepms : 500
+		});
 	},
 
 
 	stopTaskRunner: function()
 	{
 		var me = this;
-		if (me.plyrHTML5 !== false) {
-			if (me.taskRunner && me.taskRunnerTask)
-			{
-				me.taskRunner.stop(me.taskRunnerTask, true);
-				me.taskRunnerTask = null;
-			}
-		}
-		else {
-			me.player.controls.play();
+		if (me.taskRunner && me.taskRunnerTask)
+		{
+			me.taskRunner.stop(me.taskRunnerTask, true);
+			me.taskRunnerTask = null;
 		}
 	},
 
@@ -527,16 +564,12 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		if (me.plyrLog) {
-			me.plyrLog("", 1);
-		}
+		me.logCustom("", 1);
 
 		if (!me.plyrHTML5)
 		{
-			if (me.plyrLog) {
-				me.plyrLog("Loading Plyr Fallback Media Player", 1);
-				me.plyrLog("   Is IE: " + Ext.isIE.toString(), 1);
-			}
+			me.logCustom("Loading Plyr Fallback Media Player", 1);
+			me.logCustom("   Is IE: " + Ext.isIE.toString(), 1);
 			me.player = document[me.playerId];
 			if (me.player && me.getUrl())
 			{
@@ -546,9 +579,7 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
-		if (me.plyrLog) {
-			me.plyrLog("Loading Plyr HTML5 Media", 1);
-		}
+		me.logCustom("Loading Plyr HTML5 Media", 1);
 		
 		//var opts = {
 		//	enabled: true,           // Whether to completely disable Plyr
@@ -618,6 +649,7 @@ Ext.define('Ext.ux.Plyr',
 
 		if (me.getUrl())
 		{
+			me.logValueCustom("   Set url", me.getUrl(), 1);
 			me.player.source = 
 			{
 				type: me.getPlyrType(),
@@ -629,12 +661,99 @@ Ext.define('Ext.ux.Plyr',
 			};
 		}
 
-		me.player.on('ready', function(e) 
+		me.player.on('error', function(e) 
 		{
-			if (me.plyrLog) {
-				me.plyrLog("    Player initialized", 1);
-				me.plyrLog("       ID: " + me.playerId, 1);
+			//const player = e.detail.plyr;
+			me.logCustom("Event - Media player error", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			if (Ext.isFunction(me.onError)) {
+				me.onError();
 			}
+		});
+
+		me.player.on('canplay', function(e) 
+		{
+			//const player = e.detail.plyr;
+			me.logCustom("Event - Media player can play", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
+				Ext.create('Ext.util.DelayedTask', function() {
+					this.onCanPlay();
+				}, me).delay(100);
+			}
+		});
+
+		me.player.on('canplaythrough', function(e) 
+		{
+			//const player = e.detail.plyr;
+			me.logCustom("Event - Media player can play through", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
+				Ext.create('Ext.util.DelayedTask', function() {
+					this.onCanPlayThrough();
+				}, me).delay(100);
+			}
+		});
+
+		me.player.on('loadstart',function(e) 
+		{
+			me.logCustom("Event - Media started loading", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			me.logValueCustom("   Was loading", me.loading, 2);
+			me.loading++;
+			if (me.loading === 1 && Ext.isFunction(me.onLoadStart)) {
+				Ext.create('Ext.util.DelayedTask', function() {
+					this.onLoadStart();
+				}, me).delay(100);
+			}
+		});
+
+		me.player.on('loadeddata', function(e) 
+		{
+			me.logCustom("Event - First frame of media has loaded", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			me.logValueCustom("   Was loading", me.loading, 2);
+			me.loading--;
+			if (me.loading === 0 && Ext.isFunction(me.onLoadFinished)) {
+				Ext.create('Ext.util.DelayedTask', function() {
+					this.onLoadFinished();
+				}, me).delay(100);
+			}
+		});
+
+		me.player.on('stalled', me.onStalled || function(e) 
+		{
+			me.logCustom("Event - Media started loading", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			if (Ext.isFunction(me.onStalled)) {
+				me.onStalled();
+			}
+		});
+
+		me.player.on('waiting', me.onWaiting || function(e) 
+		{
+			me.logCustom("Event - Media waiting", 1);
+			me.logValueCustom("   ID", me.playerId, 2);
+			if (Ext.isFunction(me.onWaiting)) {
+				me.onWaiting();
+			}
+		});
+/*
+youtube only
+		me.player.on('statechange', function(e) 
+		{
+			if (me.logCustom) {
+				me.logCustom("   Media started loading", 1);
+				me.logCustom("      ID: " + me.playerId, 1);
+				me.logCustom("      Code: " + event.detail.code, 1);
+				// -1: Unstarted, 0: Ended, 1: Playing, 2: Paused, 3: Buffering, 5: Video cued
+			}
+		});
+*/
+		me.player.on('ready', me.onReady || function(e) 
+		{
+			me.logCustom("Event -Player initialized", 1);
+			me.logValueCustom("   ID: ", me.playerId, 1);
 
 			me.plyrInitialized = true;
 
@@ -656,12 +775,10 @@ Ext.define('Ext.ux.Plyr',
 			}
 		});
 
-		me.player.on('progress', function(e) 
+		me.player.on('progress', me.onProgress || function(e) 
 		{
-			if (me.plyrLog) {
-				me.plyrLog("    Player progress", 1);
-				me.plyrLog("       ID: " + me.playerId, 1);
-			}
+			me.logCustom("Event - Player progress", 1);
+			me.logValueCustom("   ID", me.playerId, 1);
 
 			if (!me.plyrInitialProgress && me.getCurrentTime())
 			{
@@ -690,5 +807,28 @@ Ext.define('Ext.ux.Plyr',
 				}
 			}
 		});
+	},
+
+	logCustom: function(msg, lvl)
+	{
+		var me = this;
+		if (me.plyrLog) {
+			me.plyrLog(msg, lvl, false, false, null, me.logTag, me.logTagColor);
+		}
+		else {
+            console.log('%c' + me.logTag, 'color: ' + me.logTagColor, '', msg);
+        }
+	},
+
+	logValueCustom: function(msg, value, lvl)
+	{
+		var me = this;
+		if (me.plyrLogValue) {
+			me.plyrLogValue(msg, value, lvl, false, false, me.logTag, me.logTagColor);
+		}
+		else {
+            console.log('%c' + me.logTag, 'color: ' + me.logTagColor, '', msg, value);
+        }
 	}
+
 });
