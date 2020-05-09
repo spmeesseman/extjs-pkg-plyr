@@ -716,6 +716,9 @@ Ext.define('Ext.ux.Plyr',
 			if (me.loading === 0) {
 				Ext.create('Ext.util.DelayedTask', function()
 				{
+					if (this.player.currentTime == 0 && this.getCurrentTime()) {
+						this.player.currentTime = this.getCurrentTime();
+					}
 					if (Ext.isFunction(me.onLoadFinished)) {
 						this.onLoadFinished();
 					}
