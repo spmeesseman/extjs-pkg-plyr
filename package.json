@@ -34,11 +34,12 @@
     },
     "files": [
         "plyr",
-        "src"
+        "src",
+        "sass"
     ],
     "sencha": {
         "name": "plyr",
-        "namespace": "Ext",
+        "namespace": "Ext.ux",
         "framework": "ext",
         "type": "code",
         "creator": "spmeesseman",
@@ -80,7 +81,7 @@
             ]
         },
         "sass": {
-            "namespace": "Ext",
+            "namespace": "Ext.ux",
             "etc": [
                 "${package.dir}/sass/var"
             ],

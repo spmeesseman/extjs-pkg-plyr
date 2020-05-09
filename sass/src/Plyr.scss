@@ -1,0 +1,44 @@
+@if variable-exists(background-color) 
+{
+    $custom-plyr-color: dynamic(if(lightness($background-color) < 50, $font-color, $base-color));
+    $custom-plyr-background-color: dynamic($background-color);
+}
+@else
+{
+    $custom-plyr-background-color: dynamic($panel-body-background-color);
+    $custom-plyr-color: dynamic(if(lightness($base-color) < 50, $base-color, $panel-header-color));
+    @if lightness($custom-plyr-color) > 60 and lightness($custom-plyr-background-color) > 60
+    {
+        $custom-plyr-color: dynamic($base-color);
+    }
+    @if lightness($custom-plyr-color) < 2
+    {
+        $custom-plyr-color: dynamic($base-color);
+    }
+}
+
+.plyr--audio .plyr__controls {
+    color: $custom-plyr-color;
+    background: $custom-plyr-background-color;
+}
+
+.plyr--video .plyr__controls {
+    color: $custom-plyr-color;
+    background: $custom-plyr-background-color;
+}
+
+.plyr--full-ui input[type=range] {
+    color: $custom-plyr-color;
+}
+  
+.plyr__control--overlaid {
+    background: rgba($custom-plyr-background-color, .8);
+}
+  
+.plyr__control.plyr__tab-focus {
+    box-shadow: 0 0 0 3px rgba($custom-plyr-color, .5);
+}
+  
+.plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
+    background: $custom-plyr-background-color;
+}
