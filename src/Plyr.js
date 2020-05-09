@@ -53,7 +53,7 @@ Ext.define('Ext.ux.Plyr',
 		taskRunnerTask: null,
 		idRoot: 0,
         logTag: '[Plyr]',
-		logTagColor: '#2b06d1',
+		logTagColor: '#3fbf63',
 		loading: 0
 	},
 	
@@ -151,6 +151,16 @@ Ext.define('Ext.ux.Plyr',
 		{
 			var me = this;
 			if (me.player && me.player.destroy) {
+				me.logCustom("Releasing player resources", 1);
+				me.player.off('ready', me.onReadyInternal);
+				me.player.off('progress', me.onProgressInternal);
+				me.player.off('error', me.onErrorInternal);
+				me.player.off('canplay', me.onCanPlayInternal);
+				me.player.off('canplaythrough', me.onCanPlayThroughInternal);
+				me.player.off('loadstart', me.onLoadStartInternal);
+				me.player.off('loadeddata', me.onLoadFinishedInternal);
+				me.player.off('stalled', me.onStalledInternal);
+				me.player.off('waiting', me.onWaitingInternal);
 				me.player.destroy();
 			}
 		}
@@ -660,166 +670,20 @@ Ext.define('Ext.ux.Plyr',
 			};
 		}
 
-		me.player.on('error', function(e) 
-		{
-			//const player = e.detail.plyr;
-			me.logCustom("Event - Media player error", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			if (Ext.isFunction(me.onError)) {
-				me.onError();
-			}
-		});
-
-		me.player.on('canplay', function(e) 
-		{
-			//const player = e.detail.plyr;
-			me.logCustom("Event - Media player can play", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
-				Ext.create('Ext.util.DelayedTask', function() {
-					this.onCanPlay();
-				}, me).delay(100);
-			}
-		});
-
-		me.player.on('canplaythrough', function(e) 
-		{
-			//const player = e.detail.plyr;
-			me.logCustom("Event - Media player can play through", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
-				Ext.create('Ext.util.DelayedTask', function() {
-					this.onCanPlayThrough();
-				}, me).delay(100);
-			}
-		});
-
-		me.player.on('loadstart',function(e) 
-		{
-			me.logCustom("Event - Media started loading", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			me.logValueCustom("   Was loading", me.loading, 2);
-			me.loading++;
-			if (me.loading === 1 && Ext.isFunction(me.onLoadStart)) {
-				Ext.create('Ext.util.DelayedTask', function() {
-					this.onLoadStart();
-				}, me).delay(100);
-			}
-		});
-
-		me.player.on('loadeddata', function(e) 
-		{
-			me.logCustom("Event - First frame of media has loaded", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			me.logValueCustom("   Was loading", me.loading, 2);
-			me.loading--;
-			if (me.loading === 0) {
-				Ext.create('Ext.util.DelayedTask', function()
-				{
-					if (this.player.currentTime == 0 && this.getCurrentTime()) {
-						this.player.currentTime = this.getCurrentTime();
-					}
-					if (Ext.isFunction(me.onLoadFinished)) {
-						this.onLoadFinished();
-					}
-				}, me).delay(100);
-			}
-		});
-
-		me.player.on('stalled', me.onStalled || function(e) 
-		{
-			me.logCustom("Event - Media started loading", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			if (Ext.isFunction(me.onStalled)) {
-				me.onStalled();
-			}
-		});
-
-		me.player.on('waiting', me.onWaiting || function(e) 
-		{
-			me.logCustom("Event - Media waiting", 1);
-			me.logValueCustom("   ID", me.playerId, 2);
-			if (Ext.isFunction(me.onWaiting)) {
-				me.onWaiting();
-			}
-		});
+		me.player.on('ready', function(e)    { me.onReadyInternal(e); });
+		me.player.on('progress', function(e) { me.onProgressInternal(e); });
+		me.player.on('error', function(e)    { me.onErrorInternal(e); });
+		me.player.on('canplay', function(e)  { me.onCanPlayInternal(e); });
+		me.player.on('canplaythrough', function(e) { me.onCanPlayThroughInternal(e); });
+		me.player.on('loadstart', function(e)  { me.onLoadStartInternal(e); });
+		me.player.on('loadeddata', function(e) { me.onLoadFinishedInternal(e); });
+		me.player.on('stalled', function(e)    { me.onStalledInternal(e); });
+		me.player.on('waiting', function(e)    { me.onWaitingInternal(e); });
 /*
-youtube only
-		me.player.on('statechange', function(e) 
-		{
-			if (me.logCustom) {
-				me.logCustom("   Media started loading", 1);
-				me.logCustom("      ID: " + me.playerId, 1);
-				me.logCustom("      Code: " + event.detail.code, 1);
-				// -1: Unstarted, 0: Ended, 1: Playing, 2: Paused, 3: Buffering, 5: Video cued
-			}
-		});
+		me.player.on('statechange', me.onStateChangedYouTubeInternal);
 */
-		me.player.on('ready', function(e) 
-		{
-			me.logCustom("Event -Player initialized", 1);
-			me.logValueCustom("   ID: ", me.playerId, 1);
-
-			me.plyrInitialized = true;
-
-			if (Ext.isFunction(me.onReady)) {
-				me.onReady();
-			}
-
-			//
-			// Deprecated...
-			//
-			if (me.plyrOnLoaded) {
-				if (me.plyrOnLoaded instanceof Function) {
-					me.plyrOnLoaded(me.playerId, me.player);
-				}
-				else if (me.plyrOnLoaded instanceof Object)
-				{
-					if (me.plyrOnLoaded.fn) {
-						if (me.plyrOnLoaded.scope) {
-							Ext.Function.pass(me.plyrOnLoaded.fn, [ me.playerId, me.player ], me.plyrOnLoaded.scope)();
-						}
-						else {
-							me.plyrOnLoaded.fn(me.playerId, me.player);
-						}
-					}
-				}
-			}
-		});
-
-		me.player.on('progress', function(e) 
-		{
-			me.logCustom("Event - Player progress", 1);
-			me.logValueCustom("   ID", me.playerId, 1);
-
-			me.plyrInitialProgress = true;
-
-			if (Ext.isFunction(me.onProgress)) {
-				me.onProgress();
-			}
-
-			//
-			// Deprecated...
-			//
-			if (me.plyrOnProgress) 
-			{
-				if (me.plyrOnProgress instanceof Function) {
-					me.plyrOnProgress(me.playerId, me.player);
-				}
-				else if (me.plyrOnProgress instanceof Object)
-				{
-					if (me.plyrOnProgress.fn) {
-						if (me.plyrOnProgress.scope) {
-							Ext.Function.pass(me.plyrOnProgress.fn, [ me.playerId, me.player ], me.plyrOnProgress.scope)();
-						}
-						else {
-							me.plyrOnProgress.fn(me.playerId, me.player);
-						}
-					}
-				}
-			}
-		});
 	},
+
 
 	logCustom: function(msg, lvl)
 	{
@@ -832,6 +696,7 @@ youtube only
         }
 	},
 
+
 	logValueCustom: function(msg, value, lvl)
 	{
 		var me = this;
@@ -841,6 +706,183 @@ youtube only
 		else {
             console.log('%c' + me.logTag, 'color: ' + me.logTagColor, '', msg, value);
         }
+	},
+
+
+	onCanPlayInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - Media player can play", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
+			Ext.create('Ext.util.DelayedTask', function() {
+				this.onCanPlay();
+			}, me).delay(100);
+		}
+	},
+
+
+	onCanPlayThroughInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - Media player can play through", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
+			Ext.create('Ext.util.DelayedTask', function() {
+				this.onCanPlayThrough();
+			}, me).delay(100);
+		}
+	},
+
+
+	onErrorInternal: function(e) 
+	{
+		var me = this;
+		//const player = e.detail.plyr;
+		me.logCustom("Event - Media player error", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		if (Ext.isFunction(me.onError)) {
+			me.onError();
+		}
+	},
+
+
+	onLoadFinishedInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - First frame of media has loaded", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		me.logValueCustom("   Was loading", me.loading, 2);
+		me.loading--;
+		if (me.loading === 0) {
+			Ext.create('Ext.util.DelayedTask', function()
+			{
+				if (this.player.currentTime == 0 && this.getCurrentTime()) {
+					this.player.currentTime = this.getCurrentTime();
+				}
+				if (Ext.isFunction(me.onLoadFinished)) {
+					this.onLoadFinished();
+				}
+			}, me).delay(100);
+		}
+	},
+
+
+	onLoadStartInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - Media started loading", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		me.logValueCustom("   Was loading", me.loading, 2);
+		me.loading++;
+		if (me.loading === 1 && Ext.isFunction(me.onLoadStart)) {
+			Ext.create('Ext.util.DelayedTask', function() {
+				this.onLoadStart();
+			}, me).delay(100);
+		}
+	},
+
+
+	onProgressInternal: function(e) 
+	{
+		var me = this;
+
+		me.logCustom("Event - Player progress", 1);
+		me.logValueCustom("   ID", me.playerId, 1);
+
+		me.plyrInitialProgress = true;
+
+		if (Ext.isFunction(me.onProgress)) {
+			me.onProgress();
+		}
+
+		//
+		// Deprecated...
+		//
+		if (me.plyrOnProgress) 
+		{
+			if (me.plyrOnProgress instanceof Function) {
+				me.plyrOnProgress(me.playerId, me.player);
+			}
+			else if (me.plyrOnProgress instanceof Object)
+			{
+				if (me.plyrOnProgress.fn) {
+					if (me.plyrOnProgress.scope) {
+						Ext.Function.pass(me.plyrOnProgress.fn, [ me.playerId, me.player ], me.plyrOnProgress.scope)();
+					}
+					else {
+						me.plyrOnProgress.fn(me.playerId, me.player);
+					}
+				}
+			}
+		}
+	},
+
+
+	onReadyInternal: function(e) 
+	{
+		var me = this;
+
+		me.logCustom("Event -Player initialized", 1);
+		me.logValueCustom("   ID: ", me.playerId, 1);
+
+		me.plyrInitialized = true;
+
+		if (Ext.isFunction(me.onReady)) {
+			me.onReady();
+		}
+
+		//
+		// Deprecated...
+		//
+		if (me.plyrOnLoaded) {
+			if (me.plyrOnLoaded instanceof Function) {
+				me.plyrOnLoaded(me.playerId, me.player);
+			}
+			else if (me.plyrOnLoaded instanceof Object)
+			{
+				if (me.plyrOnLoaded.fn) {
+					if (me.plyrOnLoaded.scope) {
+						Ext.Function.pass(me.plyrOnLoaded.fn, [ me.playerId, me.player ], me.plyrOnLoaded.scope)();
+					}
+					else {
+						me.plyrOnLoaded.fn(me.playerId, me.player);
+					}
+				}
+			}
+		}
+	},
+
+
+	onStalledInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - Media started loading", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		if (Ext.isFunction(me.onStalled)) {
+			me.onStalled();
+		}
+	},
+
+
+	onStateChangedYouTubeInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("   Media started loading", 1);
+		me.logCustom("      ID: " + me.playerId, 1);
+		me.logCustom("      Code: " + event.detail.code, 1);
+		// -1: Unstarted, 0: Ended, 1: Playing, 2: Paused, 3: Buffering, 5: Video cued
+	},
+
+
+	onWaitingInternal: function(e) 
+	{
+		var me = this;
+		me.logCustom("Event - Media waiting", 1);
+		me.logValueCustom("   ID", me.playerId, 2);
+		if (Ext.isFunction(me.onWaiting)) {
+			me.onWaiting();
+		}
 	}
 
 });
