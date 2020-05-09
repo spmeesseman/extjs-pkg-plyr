@@ -575,7 +575,6 @@ Ext.define('Ext.ux.Plyr',
 			{
 				me.player.URL = me.getUrl();
 			}
-
 			return;
 		}
 
@@ -714,9 +713,12 @@ Ext.define('Ext.ux.Plyr',
 			me.logValueCustom("   ID", me.playerId, 2);
 			me.logValueCustom("   Was loading", me.loading, 2);
 			me.loading--;
-			if (me.loading === 0 && Ext.isFunction(me.onLoadFinished)) {
-				Ext.create('Ext.util.DelayedTask', function() {
-					this.onLoadFinished();
+			if (me.loading === 0) {
+				Ext.create('Ext.util.DelayedTask', function()
+				{
+					if (Ext.isFunction(me.onLoadFinished)) {
+						this.onLoadFinished();
+					}
 				}, me).delay(100);
 			}
 		});
