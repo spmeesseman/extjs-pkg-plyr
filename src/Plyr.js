@@ -755,13 +755,20 @@ youtube only
 			}
 		});
 */
-		me.player.on('ready', me.onReady || function(e) 
+		me.player.on('ready', function(e) 
 		{
 			me.logCustom("Event -Player initialized", 1);
 			me.logValueCustom("   ID: ", me.playerId, 1);
 
 			me.plyrInitialized = true;
 
+			if (Ext.isFunction(me.onReady)) {
+				me.onReady();
+			}
+
+			//
+			// Deprecated...
+			//
 			if (me.plyrOnLoaded) {
 				if (me.plyrOnLoaded instanceof Function) {
 					me.plyrOnLoaded(me.playerId, me.player);
@@ -780,20 +787,20 @@ youtube only
 			}
 		});
 
-		me.player.on('progress', me.onProgress || function(e) 
+		me.player.on('progress', function(e) 
 		{
 			me.logCustom("Event - Player progress", 1);
 			me.logValueCustom("   ID", me.playerId, 1);
 
-			if (!me.plyrInitialProgress && me.getCurrentTime())
-			{
-				Ext.create('Ext.util.DelayedTask', function() {
-					me.player.currentTime = me.getCurrentTime();
-				}).delay(100);
-			}
-
 			me.plyrInitialProgress = true;
 
+			if (Ext.isFunction(me.onProgress)) {
+				me.onProgress();
+			}
+
+			//
+			// Deprecated...
+			//
 			if (me.plyrOnProgress) 
 			{
 				if (me.plyrOnProgress instanceof Function) {
