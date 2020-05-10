@@ -469,3 +469,38 @@ May 8th, 2020
     
     Include theme based sass for styling of both audio and video player.
 
+
+Version 1.6.1
+May 10th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix
+    
+    If the media player has a video loaded, randomly when releasing the 'plyr'
+    control it will make additional data requests.  In cases where the cleanup
+    is performed when the application is closing, the response may be unanswered
+    or unauthorized.
+
+2.  Refactoring
+    
+    Perform additional cleanup when component destroy event is received, remove
+    all event listeners.
+
