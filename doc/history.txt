@@ -504,3 +504,35 @@ May 10th, 2020
     Perform additional cleanup when component destroy event is received, remove
     all event listeners.
 
+
+Version 1.7.0
+December 7th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add new config property to show/hide the speed control:
+    
+        plyrShowSpeed
+    
+    When set to a boolean value of 'false', the speed control will be hidden
+    from the player controls.  Defaults to 'true'.
+
