@@ -132,6 +132,10 @@ Ext.define('Ext.ux.Plyr',
 		 */
 		plyrType: 'audio',  // or 'video'
         /**
+		 * @cfg {Boolean|Number[]} speed
+		 */
+		plyrShowSpeed: true,
+        /**
 		 * @cfg {String} url
 		 */
 		url: ''
@@ -652,9 +656,13 @@ Ext.define('Ext.ux.Plyr',
 			invertTime: false,
 			// show duration
 			controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 
-			           'pip', 'airplay', 'fullscreen', 'duration', 'restart', 'rewind', 'fast-forward' ]
+					   'pip', 'airplay', 'fullscreen', 'duration', 'restart', 'rewind', 'fast-forward' ]
 		};
 
+		if (me.getPlyrShowSpeed() === false) {
+			opts2.settings = ['captions', 'quality']
+		}
+		
 		me.player = new Plyr('#' + me.playerId, opts2);
 
 		if (me.getUrl())
