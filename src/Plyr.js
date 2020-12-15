@@ -179,7 +179,7 @@ Ext.define('Ext.ux.Plyr',
 		{
 			var me = this;
 			if (me.player && me.player.destroy) {
-				me.logCustom("Releasing player resources", 1);
+				me.logCustom('Releasing player resources', 1);
 				me.setUrl('');
 				me.player.off('ready', me.onReadyInternal);
 				me.player.off('progress', me.onProgressInternal);
@@ -229,10 +229,10 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("CurrentTime change - " + (v ? v : 'null'), 1);
+		me.logCustom('CurrentTime change - ' + (v ? v : 'null'), 1);
 
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return v;
 		}
 
@@ -240,8 +240,8 @@ Ext.define('Ext.ux.Plyr',
 			return v;
 		}
 
-		me.logCustom("   Update current time", 1);
-		me.logCustom("      Current time: \'" + v + '\' seconds', 1);
+		me.logCustom('   Update current time', 1);
+		me.logCustom('      Current time: \'' + v + '\' seconds', 1);
 
 		me.player.currentTime = v;
 
@@ -253,15 +253,15 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Source change - " + (v ? v : 'null'), 1);
+		me.logCustom('Source change - ' + (v ? v : 'null'), 1);
 
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return v;
 		}
 
-		me.logCustom("   Update source url", 1);
-		me.logCustom("      URL: " + v ? v : '', 1);
+		me.logCustom('   Update source url', 1);
+		me.logCustom('      URL: ' + v ? v : '', 1);
 
 		me.player.source = 
 		{
@@ -281,10 +281,10 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("AutoPlay change - " + (v ? v : 'null'), 1);
+		me.logCustom('AutoPlay change - ' + (v ? v : 'null'), 1);
 
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return v;
 		}
 
@@ -378,10 +378,10 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Fast Forward", 1);
+		me.logCustom('Command received - Fast Forward', 1);
 
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -404,9 +404,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Command received - Fast Forward Start", 1);
+		me.logCustom('Command received - Fast Forward Start', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -441,10 +441,10 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Command received - Fast Forward / Rewind Stop", 1);
+		me.logCustom('Command received - Fast Forward / Rewind Stop', 1);
 
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -456,9 +456,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Pause", 1);
+		me.logCustom('Command received - Pause', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -477,9 +477,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Play", 1);
+		me.logCustom('Command received - Play', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -498,9 +498,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Toggle Play/Pause", 1);
+		me.logCustom('Command received - Toggle Play/Pause', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -519,9 +519,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Rewind", 1);
+		me.logCustom('Command received - Rewind', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -544,9 +544,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Command received - Rewind Start", 1);
+		me.logCustom('Command received - Rewind Start', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -581,9 +581,9 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Stop", 1);
+		me.logCustom('Command received - Stop', 1);
 		if (!me.player) {
-			me.logCustom("No active player", 1);
+			me.logCustom('No active player', 1);
 			return;
 		}
 
@@ -656,12 +656,12 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("", 1);
+		me.logCustom('', 1);
 
 		if (!me.plyrHTML5)
 		{
-			me.logCustom("Loading Plyr Fallback Media Player", 1);
-			me.logCustom("   Is IE: " + Ext.isIE.toString(), 1);
+			me.logCustom('Loading Plyr Fallback Media Player', 1);
+			me.logCustom('   Is IE: ' + Ext.isIE.toString(), 1);
 			me.player = document[me.playerId];
 			if (me.player && me.getUrl())
 			{
@@ -670,7 +670,7 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
-		me.logCustom("Loading Plyr HTML5 Media", 1);
+		me.logCustom('Loading Plyr HTML5 Media', 1);
 		
 		//var opts = {
 		//	enabled: true,           // Whether to completely disable Plyr
@@ -748,7 +748,7 @@ Ext.define('Ext.ux.Plyr',
 
 		if (me.getUrl())
 		{
-			me.logValueCustom("   Set url", me.getUrl(), 1);
+			me.logValueCustom('   Set url', me.getUrl(), 1);
 			me.player.source = 
 			{
 				type: me.getPlyrType(),
@@ -854,8 +854,8 @@ Ext.define('Ext.ux.Plyr',
 	onCanPlayInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - Media player can play", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
+		me.logCustom('Event - Media player can play', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
 		if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
 			Ext.create('Ext.util.DelayedTask', function() {
 				this.onCanPlay();
@@ -867,8 +867,8 @@ Ext.define('Ext.ux.Plyr',
 	onCanPlayThroughInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - Media player can play through", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
+		me.logCustom('Event - Media player can play through', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
 		if (!me.loading && Ext.isFunction(me.onCanPlayThrough)) {
 			Ext.create('Ext.util.DelayedTask', function() {
 				this.onCanPlayThrough();
@@ -881,8 +881,8 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		//const player = e.detail.plyr;
-		me.logCustom("Event - Media player error", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
+		me.logCustom('Event - Media player error', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
 		if (Ext.isFunction(me.onError)) {
 			me.onError();
 		}
@@ -892,9 +892,9 @@ Ext.define('Ext.ux.Plyr',
 	onLoadFinishedInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - First frame of media has loaded", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
-		me.logValueCustom("   Was loading", me.loading, 2);
+		me.logCustom('Event - First frame of media has loaded', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
+		me.logValueCustom('   Was loading', me.loading, 2);
 		me.loading--;
 		if (me.loading === 0) {
 			Ext.create('Ext.util.DelayedTask', function()
@@ -913,9 +913,9 @@ Ext.define('Ext.ux.Plyr',
 	onLoadStartInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - Media started loading", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
-		me.logValueCustom("   Was loading", me.loading, 2);
+		me.logCustom('Event - Media started loading', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
+		me.logValueCustom('   Was loading', me.loading, 2);
 		me.loading++;
 		if (me.loading === 1 && Ext.isFunction(me.onLoadStart)) {
 			Ext.create('Ext.util.DelayedTask', function() {
@@ -929,8 +929,8 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Event - Player progress", 1);
-		me.logValueCustom("   ID", me.playerId, 1);
+		me.logCustom('Event - Player progress', 1);
+		me.logValueCustom('   ID', me.playerId, 1);
 
 		me.plyrInitialProgress = true;
 
@@ -965,8 +965,8 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Event -Player initialized", 1);
-		me.logValueCustom("   ID: ", me.playerId, 1);
+		me.logCustom('Event -Player initialized', 1);
+		me.logValueCustom('   ID: ', me.playerId, 1);
 
 		me.plyrInitialized = true;
 
@@ -999,8 +999,8 @@ Ext.define('Ext.ux.Plyr',
 	onStalledInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - Media started loading", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
+		me.logCustom('Event - Media started loading', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
 		if (Ext.isFunction(me.onStalled)) {
 			me.onStalled();
 		}
@@ -1010,9 +1010,9 @@ Ext.define('Ext.ux.Plyr',
 	onStateChangedYouTubeInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("   Media started loading", 1);
-		me.logCustom("      ID: " + me.playerId, 1);
-		me.logCustom("      Code: " + event.detail.code, 1);
+		me.logCustom('   Media started loading', 1);
+		me.logCustom('      ID: ' + me.playerId, 1);
+		me.logCustom('      Code: ' + event.detail.code, 1);
 		// -1: Unstarted, 0: Ended, 1: Playing, 2: Paused, 3: Buffering, 5: Video cued
 	},
 
@@ -1020,8 +1020,8 @@ Ext.define('Ext.ux.Plyr',
 	onWaitingInternal: function(e) 
 	{
 		var me = this;
-		me.logCustom("Event - Media waiting", 1);
-		me.logValueCustom("   ID", me.playerId, 2);
+		me.logCustom('Event - Media waiting', 1);
+		me.logValueCustom('   ID', me.playerId, 2);
 		if (Ext.isFunction(me.onWaiting)) {
 			me.onWaiting();
 		}
