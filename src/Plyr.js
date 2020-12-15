@@ -456,7 +456,7 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Resume", 1);
+		me.logCustom("Command received - Pause", 1);
 		if (!me.player) {
 			me.logCustom("No active player", 1);
 			return;
@@ -477,7 +477,7 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Resume", 1);
+		me.logCustom("Command received - Play", 1);
 		if (!me.player) {
 			me.logCustom("No active player", 1);
 			return;
@@ -498,7 +498,7 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 		
-		me.logCustom("Command received - Play/Pause", 1);
+		me.logCustom("Command received - Toggle Play/Pause", 1);
 		if (!me.player) {
 			me.logCustom("No active player", 1);
 			return;
@@ -544,7 +544,7 @@ Ext.define('Ext.ux.Plyr',
 	{
 		var me = this;
 
-		me.logCustom("Command received - Fast Forward", 1);
+		me.logCustom("Command received - Rewind Start", 1);
 		if (!me.player) {
 			me.logCustom("No active player", 1);
 			return;
@@ -574,6 +574,27 @@ Ext.define('Ext.ux.Plyr',
 			},
 			interval: stepms ? stepms : 500
 		});
+	},
+
+
+	stop: function()
+	{
+		var me = this;
+		
+		me.logCustom("Command received - Stop", 1);
+		if (!me.player) {
+			me.logCustom("No active player", 1);
+			return;
+		}
+
+		me.stopTaskRunner();
+
+		if (me.plyrHTML5 !== false) {
+			me.player.stop();
+		}
+		else {
+			me.player.controls.stop();
+		}
 	},
 
 
