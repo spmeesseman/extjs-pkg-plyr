@@ -69,6 +69,10 @@ Ext.define('Ext.ux.Plyr',
 		 */
 		audioCtlListTags: '',
 		/**
+		 * @cfg {Boolean} autoPlay
+		 */
+		autoPlay: false,
+		/**
 		 * @cfg {Object|Function} captureActivity
 		 */
 		captureActivity: {
@@ -90,6 +94,16 @@ Ext.define('Ext.ux.Plyr',
 		 */
 		onCanPlayThrough: null,
 		/**
+		 * @cfg {Function} onEnded Currently loaded audio file playback has ended
+		 * @since 1.8.0
+		 */
+		onEnded: null,
+		/**
+		 * @cfg {Function} onError
+		 * @since 1.8.0
+		 */
+		onError: null,
+		/**
 		 * @cfg {Function} onLoadStart
 		 * @since 1.4.3
 		 */
@@ -99,6 +113,16 @@ Ext.define('Ext.ux.Plyr',
 		 * @since 1.4.3
 		 */
 		onLoadFinished: null,
+		/**
+		 * @cfg {Function} onPaused
+		 * @since 1.8.0
+		 */
+		onPaused: null,
+		/**
+		 * @cfg {Function} onPlaying
+		 * @since 1.8.0
+		 */
+		onPlaying: null,
 		/**
 		 * @cfg {Function} onProgress
 		 * @since 1.4.3
@@ -166,6 +190,18 @@ Ext.define('Ext.ux.Plyr',
 				me.player.off('loadeddata', me.onLoadFinishedInternal);
 				me.player.off('stalled', me.onStalledInternal);
 				me.player.off('waiting', me.onWaitingInternal);
+				if (Ext.isFunction(me.getOnPlaying())) {
+					me.player.off('playing', me.getOnPlaying());
+				}
+				if (Ext.isFunction(me.getOnPaused())) {
+					me.player.off('pause', me.getOnPaused());
+				}
+				if (Ext.isFunction(me.getOnError())) {
+					me.player.off('error', me.getOnError());
+				}
+				if (Ext.isFunction(me.getOnEnded())) {
+					me.player.off('ended', me.getOnEnded());
+				}
 				me.player.destroy();
 			}
 		}
@@ -236,6 +272,23 @@ Ext.define('Ext.ux.Plyr',
 				//type: 'audio/mp3',
 			}]
 		};
+
+		return v;
+	},
+
+
+	updateAutoPlay: function(v)
+	{
+		var me = this;
+		
+		me.logCustom("AutoPlay change - " + (v ? v : 'null'), 1);
+
+		if (!me.player) {
+			me.logCustom("No active player", 1);
+			return v;
+		}
+
+		me.player.autoplay = !!v;
 
 		return v;
 	},
@@ -541,7 +594,10 @@ Ext.define('Ext.ux.Plyr',
 
 		me.plyrHTML5 = !Ext.isIE;
 
-		me.html = me.plyrHTML5 ? '<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+		me.html = me.plyrHTML5 ? ///'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+						//'controls controlsList="' + me.getAudioCtlListTags() + '" autoplay="' + (me.getAutoPlay() ? 'true' : 'false') +
+						//'" style="width:100%"> This browser does not support HTML 5.' +
+					'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
 						'controls controlsList="' + me.getAudioCtlListTags() + '" style="width:100%"> ' +
 						'This browser does not support HTML 5.' +
 					'</' + me.getPlyrType() + '>' : 
@@ -550,12 +606,12 @@ Ext.define('Ext.ux.Plyr',
 					//
 					'<object id="player_' + me.getIdRoot() + '" classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' +
 						'type="application/x-oleobject" width="100%" height="50">' +
-						'<param name="autostart" value="false">' +
-						'<param name="balance"   value="0">' +
-						'<param name="enabled"   value="true">' +
-						'<param name="url"       value="' + me.getUrl() + '">' +
-						'<param name="volume"    value="100">' +
-						'<param name="showstatusbar"   value="true">' +
+						'<param name="autostart" value="' + (me.getAutoPlay() ? 'true' : 'false') + '">' +
+						'<param name="balance" value="0">' +
+						'<param name="enabled" value="true">' +
+						'<param name="url" value="' + me.getUrl() + '">' +
+						'<param name="volume" value="100">' +
+						'<param name="showstatusbar" value="true">' +
 						'<param name="currentposition" value="' + me.getCurrentTime() + '">' +
 					'</object>';
 		me.callParent(arguments);
@@ -662,6 +718,10 @@ Ext.define('Ext.ux.Plyr',
 		if (me.getPlyrShowSpeed() === false) {
 			opts2.settings = ['captions', 'quality']
 		}
+
+		if (me.getAutoPlay()) {
+			opts2.autoplay = true;
+		}
 		
 		me.player = new Plyr('#' + me.playerId, opts2);
 
@@ -679,6 +739,46 @@ Ext.define('Ext.ux.Plyr',
 			};
 		}
 
+		//
+		// Register events
+		//
+		// Available Standard Media Events
+		//
+		// Event Type       Description
+		// progress	        Sent periodically to inform interested parties of progress downloading the media. Information about the current amount of the media that has been downloaded is available in the media element's buffered attribute.
+		// playing	        Sent when the media begins to play (either for the first time, after having been paused, or after ending and then restarting).
+		// play	            Sent when playback of the media starts after having been paused; that is, when playback is resumed after a prior pause event.
+		// pause	        Sent when playback is paused.
+		// timeupdate	    The time indicated by the element's currentTime attribute has changed.
+		// volumechange	    Sent when the audio volume changes (both when the volume is set and when the muted state is changed).
+		// seeking	        Sent when a seek operation begins.
+		// seeked	        Sent when a seek operation completes.
+		// ratechange	    Sent when the playback speed changes.
+		// ended	        Sent when playback completes. Note: This does not fire if autoplay is true.
+		// enterfullscreen	Sent when the player enters fullscreen mode (either the proper fullscreen or full-window fallback for older browsers).
+		// exitfullscreen	Sent when the player exits fullscreen mode.
+		// captionsenabled	Sent when captions are enabled.
+		// captionsdisabled	Sent when captions are disabled.
+		// languagechange	Sent when the caption language is changed.
+		// controlshidden	Sent when the controls are hidden.
+		// controlsshown	Sent when the controls are shown.
+		// ready	        Triggered when the instance is ready for API calls.
+		//
+		// Available HTML5 Only Events
+		//
+		// Event Type	    Description
+		// loadstart	    Sent when loading of the media begins.
+		// loadeddata	    The first frame of the media has finished loading.
+		// loadedmetadata	The media's metadata has finished loading; all attributes now contain as much useful information as they're going to.
+		// qualitychange	The quality of playback has changed.
+		// canplay	        Sent when enough data is available that the media can be played, at least for a couple of frames. This corresponds to the HAVE_ENOUGH_DATA readyState.
+		// canplaythrough	Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be played without interruption, assuming the download rate remains at least at the current level. Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox. Other browsers might not fire this event.
+		// stalled	        Sent when the user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
+		// waiting	        Sent when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek).
+		// emptied   	    The media has become empty; for example, this event is sent if the media has already been loaded (or partially loaded), and the load() method is called to reload it.
+		// cuechange	    Sent when a TextTrack has changed the currently displaying cues.
+		// error	        Sent when an error occurs. The element's error attribute contains more information.
+		//
 		me.player.on('ready', function(e)    { me.onReadyInternal(e); });
 		me.player.on('progress', function(e) { me.onProgressInternal(e); });
 		me.player.on('error', function(e)    { me.onErrorInternal(e); });
@@ -688,6 +788,18 @@ Ext.define('Ext.ux.Plyr',
 		me.player.on('loadeddata', function(e) { me.onLoadFinishedInternal(e); });
 		me.player.on('stalled', function(e)    { me.onStalledInternal(e); });
 		me.player.on('waiting', function(e)    { me.onWaitingInternal(e); });
+		if (Ext.isFunction(me.getOnPlaying())) {
+			me.player.on('playing', me.getOnPlaying());
+		}
+		if (Ext.isFunction(me.getOnPaused())) {
+			me.player.on('pause', me.getOnPaused());
+		}
+		if (Ext.isFunction(me.getOnError())) {
+			me.player.on('error', me.getOnError());
+		}
+		if (Ext.isFunction(me.getOnEnded())) {
+			me.player.on('ended', me.getOnEnded()); // does not fire if autoplay is true
+		}
 /*
 		me.player.on('statechange', me.onStateChangedYouTubeInternal);
 */
