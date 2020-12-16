@@ -536,3 +536,47 @@ December 7th, 2020
     When set to a boolean value of 'false', the speed control will be hidden
     from the player controls.  Defaults to 'true'.
 
+
+Version 1.8.0
+December 15th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add new config properties to register callbacks for playback events:
+    
+        onEnded
+        onError
+        onPaused
+        onPlaying
+    
+2.  Feature
+    
+    Add new config property to enable autoplay:
+    
+        autoPlay
+
+3.  Feature
+    
+    Add new function to stop audio and reset to beginning:
+    
+        stop()
+
