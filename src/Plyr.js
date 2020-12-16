@@ -1,3 +1,160 @@
+/**
+ * @class Ext.ux.Plyr
+ *
+ * ExtJS Plyr by Sam Potts Wrapper
+ * 
+ * @singleton
+ * 
+ * List of available plyr API methods:
+ *
+ *     play()¹	           -	Start playback.
+ *     pause()	           -	Pause playback.
+ *     stop()	           -	Stop playback and reset to start.
+ *     restart()	       -	Restart playback.
+ *     fullscreen.enter()	-	Enter fullscreen. If fullscreen is not supported, a fallback "full window/viewport" is used instead.
+ *     fullscreen.exit()	-	Exit fullscreen.
+ *     fullscreen.toggle()	-	Toggle fullscreen.
+ *     airplay()	        -	Trigger the airplay dialog on supported devices.
+ *     destroy()	        -	Destroy the instance and garbage collect any elements.
+ *     togglePlay(toggle)	    Boolean	Toggle playback, if no parameters are passed, it will toggle based on current status.
+ *     rewind(seekTime)	        Number  Rewind playback by the specified seek time. If no parameter is passed, the default seek time will be used.
+ *     forward(seekTime)	    Number	Fast forward by the specified seek time. If no parameter is passed, the default seek time will be used.
+ *     increaseVolume(step)	    Number	Increase volume by the specified step. If no parameter is passed, the default step will be used.
+ *     decreaseVolume(step)	    Number	Increase volume by the specified step. If no parameter is passed, the default step will be used.
+ *     toggleCaptions(toggle)   Boolean	Toggle captions display. If no parameter is passed, it will toggle based on current status.
+ *     toggleControls(toggle)   Boolean	Toggle the controls (video only). Takes optional truthy value to force it on/off.
+ *     on(event, function)	    String, Function	Add an event listener for the specified event.
+ *     once(event, function)    String, Function	Add an event listener for the specified event once.
+ *     off(event, function)	    String, Function	Remove an event listener for the specified event.
+ *     supports(type)	        String	Check support for a mime type.
+ *
+ * List of available Getters and Setters
+ *
+ *     Prop     Get Set Description
+ *
+ *     isHTML5	✓	-	Returns a boolean indicating if the current player is HTML5.
+ *     isEmbed	✓	-	Returns a boolean indicating if the current player is an embedded player.
+ *     playing	✓	-	Returns a boolean indicating if the current player is playing.
+ *     paused	✓	-	Returns a boolean indicating if the current player is paused.
+ *     stopped	✓	-	Returns a boolean indicating if the current player is stopped.
+ *     ended	✓	-	Returns a boolean indicating if the current player has finished playback.
+ *     buffered	✓	-	Returns a float between 0 and 1 indicating how much of the media is buffered
+ *     currentTime	✓	✓	Gets or sets the currentTime for the player. The setter accepts a float in seconds.
+ *     seeking	✓	-	Returns a boolean indicating if the current player is seeking.
+ *     duration	✓	-	Returns the duration for the current media.
+ *     volume	✓	✓	Gets or sets the volume for the player. The setter accepts a float between 0 and 1.
+ *     muted	✓	✓	Gets or sets the muted state of the player. The setter accepts a boolean.
+ *     hasAudio	✓	-	Returns a boolean indicating if the current media has an audio track.
+ *     speed	✓	✓	Gets or sets the speed for the player. The setter accepts a value in the options specified in your config. Generally the minimum should be 0.5.
+ *     quality¹	✓	✓	Gets or sets the quality for the player. The setter accepts a value from the options specified in your config.
+ *     loop	    ✓	✓	Gets or sets the current loop state of the player. The setter accepts a boolean.
+ *     source	✓	✓	Gets or sets the current source for the player. The setter accepts an object. See source setter below for examples.
+ *     poster	✓	✓	Gets or sets the current poster image for the player. The setter accepts a string; the URL for the updated poster image.
+ *     autoplay	✓	✓	Gets or sets the autoplay state of the player. The setter accepts a boolean.
+ *     currentTrack	✓	✓	Gets or sets the caption track by index. -1 means the track is missing or captions is not active
+ *     language	✓	✓	Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for 
+ *                       the languages is dependent on the captions you include. If your captions don't have any language data, or if you have multiple 
+ *                       tracks with the same language, you may want to use currentTrack instead.
+ *     pip	    ✓	✓	Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This currently only supported on Safari
+ *                       10+ (on MacOS Sierra+ and iOS 10+) and Chrome 70+.
+ *     ratio	✓	✓	Gets or sets the video aspect ratio. The setter accepts a string in the same format as the ratio option.
+ *     download	✓	✓	Gets or sets the URL for the download button. The setter accepts a string containing a valid absolute URL.
+ *     fullscreen.active    ✓	-	Returns a boolean indicating if the current player is in fullscreen mode.
+ *     fullscreen.enabled	✓	-	Returns a boolean indicating if the current player has fullscreen enabled.
+ * 
+ *     var opts = {
+ *    	enabled: true,           // Whether to completely disable Plyr
+ *    	debug: false,            // Display debugging information in the console
+ *    	autoplay: false,         // Autoplay the media on load. This is generally advised against
+ *    	autopause: true,         // Only allow one player playing at once
+ *    	muted: false,            // Whether to start playback muted
+ *    	hideControls: true,      // Hide video controls automatically after 2s of no mouse
+ *    	clickToPlay: true,       // Click (or tap) of the video container will toggle play/pause
+ *    	disableContextMenu: true,// Disable right click menu on video
+ *    	resetOnEnd: false,       // Reset the playback to the start once playback is complete
+ *    	seekTime: 10,            // The time, in seconds, to seek when a user hits fast forward or rewind
+ *    	volume: 1,               // A number, between 0 and 1, representing the initial volume of the player
+ *    	duration: null,          // Specify a custom duration for media.
+ *    	invertTime: true,        // Display the current time as a countdown rather than an incremental counter
+ *    	// Displays the duration of the media on the "metadataloaded" event (on startup) in the current time display. 
+ *    	//This will only work if the preload attribute is not set to none (or is not set at all) and you choose not to 
+ *    	// display the duration (see controls option).
+ *    	displayDuration: true,   
+ *    	//
+ *    	// If a function is passed, it is assumed your method will return either an element or HTML string 
+ *    	// for the controls. Three arguments will be passed to your function; id (the unique id for the 
+ *    	// player), seektime (the seektime step in seconds), and title (the media title). See controls.md 
+ *    	//for more info on how the html needs to be structured.
+ *    	// See https://github.com/spmeesseman/plyr/blob/master/controls.md for complete list of controls
+ *    	//
+ *    	controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
+ *    	// If using the default controls are used then you can specify which settings to show in the menu
+ *    	settings: ['captions', 'quality', 'speed', 'loop'],
+ *    	keyboard: { focused: true, global: false }, // Enable keyboard shortcuts for focused players only or globally
+ *    	tooltips: { controls: false, seek: true },  // Display control labels as tooltips on :hover & :focus (by default, the labels 
+ *                are screen reader only). seek: Display a seek tooltip to indicate on click where the media would seek to.
+ *    	storage:  { enabled: true, key: 'plyr' },   // enabled: Allow use of local storage to store user settings. key: The key name to use.
+ *    	captions: { active: false, language: 'auto', update: false },
+ *    	speed:    { selected: 1, options: [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2] }
+ *    };
+ *
+ *    r controls = [
+ *    play-large', // The large play button in the center
+ *    restart', // Restart playback
+ *    rewind', // Rewind by the seek time (default 10 seconds)
+ *    play', // Play/pause playback
+ *    fast-forward', // Fast forward by the seek time (default 10 seconds)
+ *    progress', // The progress bar and scrubber for playback and buffering
+ *    current-time', // The current time of playback
+ *    duration', // The full duration of the media
+ *    mute', // Toggle mute
+ *    volume', // Volume control
+ *    captions', // Toggle captions
+ *    settings', // Settings menu
+ *    pip', // Picture-in-picture (currently Safari only)
+ *    airplay', // Airplay (currently Safari only)
+ *    download', // Show a download button with a link to either the current source or a custom URL you specify in your options
+ *    fullscreen', // Toggle fullscreen
+ *   
+ *    Register events
+ *   
+ *    Available Standard Media Events
+ *   
+ *    Event Type       Description
+ *    progress	        Sent periodically to inform interested parties of progress downloading the media. Information about the current amount of the media that has been downloaded is available in the media element's buffered attribute.
+ *    playing	        Sent when the media begins to play (either for the first time, after having been paused, or after ending and then restarting).
+ *    play	            Sent when playback of the media starts after having been paused; that is, when playback is resumed after a prior pause event.
+ *    pause	        Sent when playback is paused.
+ *    timeupdate	    The time indicated by the element's currentTime attribute has changed.
+ *    volumechange	    Sent when the audio volume changes (both when the volume is set and when the muted state is changed).
+ *    seeking	        Sent when a seek operation begins.
+ *    seeked	        Sent when a seek operation completes.
+ *    ratechange	    Sent when the playback speed changes.
+ *    ended	        Sent when playback completes. Note: This does not fire if autoplay is true.
+ *    enterfullscreen	Sent when the player enters fullscreen mode (either the proper fullscreen or full-window fallback for older browsers).
+ *    exitfullscreen	Sent when the player exits fullscreen mode.
+ *    captionsenabled	Sent when captions are enabled.
+ *    captionsdisabled	Sent when captions are disabled.
+ *    languagechange	Sent when the caption language is changed.
+ *    controlshidden	Sent when the controls are hidden.
+ *    controlsshown	Sent when the controls are shown.
+ *    ready	        Triggered when the instance is ready for API calls.
+ *   
+ *    Available HTML5 Only Events
+ *   
+ *    Event Type	    Description
+ *    loadstart	    Sent when loading of the media begins.
+ *    loadeddata	    The first frame of the media has finished loading.
+ *    loadedmetadata	The media's metadata has finished loading; all attributes now contain as much useful information as they're going to.
+ *    qualitychange	The quality of playback has changed.
+ *    canplay	        Sent when enough data is available that the media can be played, at least for a couple of frames. This corresponds to the HAVE_ENOUGH_DATA readyState.
+ *    canplaythrough	Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be played without interruption, assuming the download rate remains at least at the current level. Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox. Other browsers might not fire this event.
+ *    stalled	        Sent when the user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
+ *    waiting	        Sent when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek).
+ *    emptied   	    The media has become empty; for example, this event is sent if the media has already been loaded (or partially loaded), and the load() method is called to reload it.
+ *    cuechange	    Sent when a TextTrack has changed the currently displaying cues.
+ *    error	        Sent when an error occurs. The element's error attribute contains more information.
+ */
 Ext.define('Ext.ux.Plyr', 
 {
     extend: 'Ext.Container',
@@ -154,7 +311,7 @@ Ext.define('Ext.ux.Plyr',
 		/**
 		 * @cfg {String} plyrType
 		 */
-		plyrType: 'audio',  // or 'video'
+		plyrType: 'audio',  // or 'video', 'or 'youtube'
         /**
 		 * @cfg {Boolean|Number[]} speed
 		 */
@@ -314,65 +471,6 @@ Ext.define('Ext.ux.Plyr',
     //        '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
     //    '</object>'
 	//},
-
-	//
-	// List of available plyr API methods:
-	//
-	//     play()¹	           -	Start playback.
-    //     pause()	           -	Pause playback.
-    //     stop()	           -	Stop playback and reset to start.
-    //     restart()	       -	Restart playback.
-    //     fullscreen.enter()	-	Enter fullscreen. If fullscreen is not supported, a fallback "full window/viewport" is used instead.
-    //     fullscreen.exit()	-	Exit fullscreen.
-    //     fullscreen.toggle()	-	Toggle fullscreen.
-    //     airplay()	        -	Trigger the airplay dialog on supported devices.
-    //     destroy()	        -	Destroy the instance and garbage collect any elements.
-    //     togglePlay(toggle)	    Boolean	Toggle playback, if no parameters are passed, it will toggle based on current status.
-    //     rewind(seekTime)	        Number  Rewind playback by the specified seek time. If no parameter is passed, the default seek time will be used.
-    //     forward(seekTime)	    Number	Fast forward by the specified seek time. If no parameter is passed, the default seek time will be used.
-    //     increaseVolume(step)	    Number	Increase volume by the specified step. If no parameter is passed, the default step will be used.
-    //     decreaseVolume(step)	    Number	Increase volume by the specified step. If no parameter is passed, the default step will be used.
-    //     toggleCaptions(toggle)   Boolean	Toggle captions display. If no parameter is passed, it will toggle based on current status.
-    //     toggleControls(toggle)   Boolean	Toggle the controls (video only). Takes optional truthy value to force it on/off.
-    //     on(event, function)	    String, Function	Add an event listener for the specified event.
-    //     once(event, function)    String, Function	Add an event listener for the specified event once.
-    //     off(event, function)	    String, Function	Remove an event listener for the specified event.
-    //     supports(type)	        String	Check support for a mime type.
-	//
-	// List of available Getters and Setters
-	//
-	//     Prop     Get Set Description
-	//
-	//     isHTML5	✓	-	Returns a boolean indicating if the current player is HTML5.
-    //     isEmbed	✓	-	Returns a boolean indicating if the current player is an embedded player.
-    //     playing	✓	-	Returns a boolean indicating if the current player is playing.
-    //     paused	✓	-	Returns a boolean indicating if the current player is paused.
-    //     stopped	✓	-	Returns a boolean indicating if the current player is stopped.
-    //     ended	✓	-	Returns a boolean indicating if the current player has finished playback.
-    //     buffered	✓	-	Returns a float between 0 and 1 indicating how much of the media is buffered
-    //     currentTime	✓	✓	Gets or sets the currentTime for the player. The setter accepts a float in seconds.
-    //     seeking	✓	-	Returns a boolean indicating if the current player is seeking.
-    //     duration	✓	-	Returns the duration for the current media.
-    //     volume	✓	✓	Gets or sets the volume for the player. The setter accepts a float between 0 and 1.
-    //     muted	✓	✓	Gets or sets the muted state of the player. The setter accepts a boolean.
-    //     hasAudio	✓	-	Returns a boolean indicating if the current media has an audio track.
-    //     speed	✓	✓	Gets or sets the speed for the player. The setter accepts a value in the options specified in your config. Generally the minimum should be 0.5.
-    //     quality¹	✓	✓	Gets or sets the quality for the player. The setter accepts a value from the options specified in your config.
-    //     loop	    ✓	✓	Gets or sets the current loop state of the player. The setter accepts a boolean.
-    //     source	✓	✓	Gets or sets the current source for the player. The setter accepts an object. See source setter below for examples.
-    //     poster	✓	✓	Gets or sets the current poster image for the player. The setter accepts a string; the URL for the updated poster image.
-    //     autoplay	✓	✓	Gets or sets the autoplay state of the player. The setter accepts a boolean.
-    //     currentTrack	✓	✓	Gets or sets the caption track by index. -1 means the track is missing or captions is not active
-	//     language	✓	✓	Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for 
-	//                       the languages is dependent on the captions you include. If your captions don't have any language data, or if you have multiple 
-	//                       tracks with the same language, you may want to use currentTrack instead.
-	//     pip	    ✓	✓	Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This currently only supported on Safari
-	//                       10+ (on MacOS Sierra+ and iOS 10+) and Chrome 70+.
-    //     ratio	✓	✓	Gets or sets the video aspect ratio. The setter accepts a string in the same format as the ratio option.
-	//     download	✓	✓	Gets or sets the URL for the download button. The setter accepts a string containing a valid absolute URL.
-	//     fullscreen.active    ✓	-	Returns a boolean indicating if the current player is in fullscreen mode.
-    //     fullscreen.enabled	✓	-	Returns a boolean indicating if the current player has fullscreen enabled.
-    //
 
 	ffwd: function(seconds)
 	{
@@ -611,30 +709,55 @@ Ext.define('Ext.ux.Plyr',
 	
 	initComponent: function() 
     {
-    	var me = this;
+		var me = this, src,
+			pType = me.getPlyrType();
 
 		me.plyrHTML5 = !Ext.isIE;
+		if (!pType) {
+			pType = 'audio';
+			me.setPlyrType(pType);
+		}
 
-		me.html = me.plyrHTML5 ? ///'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
-						//'controls controlsList="' + me.getAudioCtlListTags() + '" autoplay="' + (me.getAutoPlay() ? 'true' : 'false') +
-						//'" style="width:100%"> This browser does not support HTML 5.' +
-					'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
-						'controls controlsList="' + me.getAudioCtlListTags() + '" style="width:100%"> ' +
-						'This browser does not support HTML 5.' +
-					'</' + me.getPlyrType() + '>' : 
-					//
-					// IE does not support HTML5 Audio Player
-					//
-					'<object id="player_' + me.getIdRoot() + '" classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' +
-						'type="application/x-oleobject" width="100%" height="50">' +
-						'<param name="autostart" value="' + (me.getAutoPlay() ? 'true' : 'false') + '">' +
-						'<param name="balance" value="0">' +
-						'<param name="enabled" value="true">' +
-						'<param name="url" value="' + me.getUrl() + '">' +
-						'<param name="volume" value="100">' +
-						'<param name="showstatusbar" value="true">' +
-						'<param name="currentposition" value="' + me.getCurrentTime() + '">' +
-					'</object>';
+		if (pType === 'audio' || pType === 'video')
+		{
+			me.html = me.plyrHTML5 ? ///'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+							//'controls controlsList="' + me.getAudioCtlListTags() + '" autoplay="' + (me.getAutoPlay() ? 'true' : 'false') +
+							//'" style="width:100%"> This browser does not support HTML 5.' +
+						'<' + me.getPlyrType() + ' id="player_' + me.getIdRoot() + '" ' +
+							'controls controlsList="' + me.getAudioCtlListTags() + '" style="width:100%"> ' +
+							'This browser does not support HTML 5.' +
+						'</' + me.getPlyrType() + '>' : 
+						//
+						// IE does not support HTML5 Audio Player
+						//
+						'<object id="player_' + me.getIdRoot() + '" classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' +
+							'type="application/x-oleobject" width="100%" height="50">' +
+							'<param name="autostart" value="' + (me.getAutoPlay() ? 'true' : 'false') + '">' +
+							'<param name="balance" value="0">' +
+							'<param name="enabled" value="true">' +
+							'<param name="url" value="' + me.getUrl() + '">' +
+							'<param name="volume" value="100">' +
+							'<param name="showstatusbar" value="true">' +
+							'<param name="currentposition" value="' + me.getCurrentTime() + '">' +
+						'</object>';
+		}
+		else if (pType === 'vimeo')
+		{
+			src = 'https://player.vimeo.com/video/' + me.getUrl() + '?loop=false&amp;byline=false&amp;portrait=false&amp;' +
+			      'title=false&amp;speed=true&amp;transparent=0&amp;gesture=media';
+			me.html = '<div class="plyr__video-embed" id="player_' + me.getIdRoot() + '">' +
+						'<iframe src="' + src + '" allowfullscreen allowtransparency allow="autoplay"></iframe>' +
+					  '</div>';
+		}
+		else if (pType === 'youtube')
+		{
+			src = 'https://www.youtube.com/embed/' + me.getUrl() + '?origin=' + location.origin + '&amp;iv_load_policy=3&amp;' +
+			      'modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1';
+			me.html = '<div class="plyr__video-embed" id="player_' + me.getIdRoot() + '">' +
+						'<iframe src="' + src + '" allowfullscreen allowtransparency allow="autoplay"></iframe>' +
+					  '</div>';
+		}
+
 		me.callParent(arguments);
 	},
 
@@ -670,64 +793,8 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
-		me.logCustom('Loading Plyr HTML5 Media', 1);
+		me.logCustom('Loading Plyr', 1);
 		
-		//var opts = {
-		//	enabled: true,           // Whether to completely disable Plyr
-		//	debug: false,            // Display debugging information in the console
-		//	autoplay: false,         // Autoplay the media on load. This is generally advised against
-		//	autopause: true,         // Only allow one player playing at once
-		//	muted: false,            // Whether to start playback muted
-		//	hideControls: true,      // Hide video controls automatically after 2s of no mouse
-		//	clickToPlay: true,       // Click (or tap) of the video container will toggle play/pause
-		//	disableContextMenu: true,// Disable right click menu on video
-		//	resetOnEnd: false,       // Reset the playback to the start once playback is complete
-		//	seekTime: 10,            // The time, in seconds, to seek when a user hits fast forward or rewind
-		//	volume: 1,               // A number, between 0 and 1, representing the initial volume of the player
-		//	duration: null,          // Specify a custom duration for media.
-		//	invertTime: true,        // Display the current time as a countdown rather than an incremental counter
-		//	// Displays the duration of the media on the "metadataloaded" event (on startup) in the current time display. 
-		//	//This will only work if the preload attribute is not set to none (or is not set at all) and you choose not to 
-		//	// display the duration (see controls option).
-		//	displayDuration: true,   
-		//	//
-		//	// If a function is passed, it is assumed your method will return either an element or HTML string 
-		//	// for the controls. Three arguments will be passed to your function; id (the unique id for the 
-		//	// player), seektime (the seektime step in seconds), and title (the media title). See controls.md 
-		//	//for more info on how the html needs to be structured.
-		//	// See https://github.com/spmeesseman/plyr/blob/master/controls.md for complete list of controls
-		//	//
-		//	controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
-		//	// If using the default controls are used then you can specify which settings to show in the menu
-		//	settings: ['captions', 'quality', 'speed', 'loop'],
-		//	keyboard: { focused: true, global: false }, // Enable keyboard shortcuts for focused players only or globally
-		//	tooltips: { controls: false, seek: true },  // Display control labels as tooltips on :hover & :focus (by default, the labels 
-		//            are screen reader only). seek: Display a seek tooltip to indicate on click where the media would seek to.
-		//	storage:  { enabled: true, key: 'plyr' },   // enabled: Allow use of local storage to store user settings. key: The key name to use.
-		//	captions: { active: false, language: 'auto', update: false },
-		//	speed:    { selected: 1, options: [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2] }
-		//};
-		/*
-		var controls = [
-			'play-large', // The large play button in the center
-			'restart', // Restart playback
-			'rewind', // Rewind by the seek time (default 10 seconds)
-			'play', // Play/pause playback
-			'fast-forward', // Fast forward by the seek time (default 10 seconds)
-			'progress', // The progress bar and scrubber for playback and buffering
-			'current-time', // The current time of playback
-			'duration', // The full duration of the media
-			'mute', // Toggle mute
-			'volume', // Volume control
-			'captions', // Toggle captions
-			'settings', // Settings menu
-			'pip', // Picture-in-picture (currently Safari only)
-			'airplay', // Airplay (currently Safari only)
-			'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
-			'fullscreen', // Toggle fullscreen
-		];
-		*/
-
 		var opts2 = {
 			// count up instead of down
 			invertTime: false,
@@ -737,7 +804,7 @@ Ext.define('Ext.ux.Plyr',
 		};
 
 		if (me.getPlyrShowSpeed() === false) {
-			opts2.settings = ['captions', 'quality']
+			opts2.settings = ['captions', 'quality'];
 		}
 
 		if (me.getAutoPlay()) {
@@ -749,57 +816,50 @@ Ext.define('Ext.ux.Plyr',
 		if (me.getUrl())
 		{
 			me.logValueCustom('   Set url', me.getUrl(), 1);
-			me.player.source = 
+			
+			
+			if (me.getPlyrType() === 'audio')
 			{
-				type: me.getPlyrType(),
-				sources: [
-				{
-					src: me.getUrl()//,
-					//type: 'audio/mp3',
-				}]
-			};
+				me.player.source = {
+					type: me.getPlyrType(),
+					sources: [{
+						src: me.getUrl()//,
+						//type: 'audio/mp3',
+					}]
+				};
+			}
+			if (me.getPlyrType() === 'video')
+			{
+				me.player.source = {
+					type: me.getPlyrType(),
+					sources: [{
+						src: me.getUrl()//,
+						//type: 'video/mp4',
+					}]
+				};
+			}
+			else  if (me.getPlyrType() === 'youtube')
+			{
+				me.player.source = {
+					type: 'video',
+					sources: [{
+						src: me.getUrl(),
+						provider: 'youtube',
+					}]
+				};
+			}
+			else  if (me.getPlyrType() === 'vimeo')
+			{
+				me.player.source = {
+					type: 'video',
+					sources: [{
+						src: me.getUrl(),
+						provider: 'vimeo',
+					}]
+				};
+			}
 		}
 
-		//
-		// Register events
-		//
-		// Available Standard Media Events
-		//
-		// Event Type       Description
-		// progress	        Sent periodically to inform interested parties of progress downloading the media. Information about the current amount of the media that has been downloaded is available in the media element's buffered attribute.
-		// playing	        Sent when the media begins to play (either for the first time, after having been paused, or after ending and then restarting).
-		// play	            Sent when playback of the media starts after having been paused; that is, when playback is resumed after a prior pause event.
-		// pause	        Sent when playback is paused.
-		// timeupdate	    The time indicated by the element's currentTime attribute has changed.
-		// volumechange	    Sent when the audio volume changes (both when the volume is set and when the muted state is changed).
-		// seeking	        Sent when a seek operation begins.
-		// seeked	        Sent when a seek operation completes.
-		// ratechange	    Sent when the playback speed changes.
-		// ended	        Sent when playback completes. Note: This does not fire if autoplay is true.
-		// enterfullscreen	Sent when the player enters fullscreen mode (either the proper fullscreen or full-window fallback for older browsers).
-		// exitfullscreen	Sent when the player exits fullscreen mode.
-		// captionsenabled	Sent when captions are enabled.
-		// captionsdisabled	Sent when captions are disabled.
-		// languagechange	Sent when the caption language is changed.
-		// controlshidden	Sent when the controls are hidden.
-		// controlsshown	Sent when the controls are shown.
-		// ready	        Triggered when the instance is ready for API calls.
-		//
-		// Available HTML5 Only Events
-		//
-		// Event Type	    Description
-		// loadstart	    Sent when loading of the media begins.
-		// loadeddata	    The first frame of the media has finished loading.
-		// loadedmetadata	The media's metadata has finished loading; all attributes now contain as much useful information as they're going to.
-		// qualitychange	The quality of playback has changed.
-		// canplay	        Sent when enough data is available that the media can be played, at least for a couple of frames. This corresponds to the HAVE_ENOUGH_DATA readyState.
-		// canplaythrough	Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be played without interruption, assuming the download rate remains at least at the current level. Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox. Other browsers might not fire this event.
-		// stalled	        Sent when the user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
-		// waiting	        Sent when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek).
-		// emptied   	    The media has become empty; for example, this event is sent if the media has already been loaded (or partially loaded), and the load() method is called to reload it.
-		// cuechange	    Sent when a TextTrack has changed the currently displaying cues.
-		// error	        Sent when an error occurs. The element's error attribute contains more information.
-		//
 		me.player.on('ready', function(e)    { me.onReadyInternal(e); });
 		me.player.on('progress', function(e) { me.onProgressInternal(e); });
 		me.player.on('error', function(e)    { me.onErrorInternal(e); });
