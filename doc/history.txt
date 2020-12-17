@@ -580,3 +580,37 @@ December 15th, 2020
     
         stop()
 
+
+Version 1.9.0
+December 17th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add YouTube and Vimeo video support.
+
+3.  Bug Fix
+    
+    When video is opened, a javascript error is seen in the console when the
+    component is destroyed:
+    
+        media.player.load is not a function
+
