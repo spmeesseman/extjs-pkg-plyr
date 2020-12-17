@@ -291,6 +291,16 @@ Ext.define('Ext.ux.Plyr',
 		 */
 		onReady: null,
 		/**
+		 * @cfg {Function} onSeekEnded
+		 * @since 1.11.0
+		 */
+		onSeekEnded: null,
+		/**
+		 * @cfg {Function} onSeekStart
+		 * @since 1.11.0
+		 */
+		onSeekStarted: null,
+		/**
 		 * @cfg {Function} onStalled
 		 * @since 1.4.3
 		 */
@@ -357,6 +367,12 @@ Ext.define('Ext.ux.Plyr',
 				}
 				if (Ext.isFunction(me.getOnEnded())) {
 					me.player.off('ended', me.getOnEnded());
+				}
+				if (Ext.isFunction(me.getOnSeekEnded())) {
+					me.player.off('seeked', me.getOnSeekEnded());
+				}
+				if (Ext.isFunction(me.getOnSeekStarted())) {
+					me.player.off('seeking', me.getOnSeekStarted());
 				}
 				me.player.destroy();
 			}
@@ -879,6 +895,12 @@ Ext.define('Ext.ux.Plyr',
 		}
 		if (Ext.isFunction(me.getOnEnded())) {
 			me.player.on('ended', me.getOnEnded()); // does not fire if autoplay is true
+		}
+		if (Ext.isFunction(me.getOnSeekStarted())) {
+			me.player.on('seeking', me.getOnSeekStarted());
+		}
+		if (Ext.isFunction(me.getOnSeekEnded())) {
+			me.player.on('seeked', me.getOnSeekEnded());
 		}
 /*
 		me.player.on('statechange', me.onStateChangedYouTubeInternal);
