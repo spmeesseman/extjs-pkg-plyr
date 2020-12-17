@@ -337,7 +337,6 @@ Ext.define('Ext.ux.Plyr',
 			var me = this;
 			if (me.player && me.player.destroy) {
 				me.logCustom('Releasing player resources', 1);
-				me.setUrl('');
 				me.player.off('ready', me.onReadyInternal);
 				me.player.off('progress', me.onProgressInternal);
 				me.player.off('error', me.onErrorInternal);
