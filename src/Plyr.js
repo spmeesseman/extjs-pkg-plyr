@@ -523,6 +523,10 @@ Ext.define('Ext.ux.Plyr',
 			return;
 		}
 
+		if (!seconds) {
+			seconds = 2;
+		}
+
 		me.stopTaskRunner();
 
 		me.player.forward(seconds);
@@ -661,6 +665,10 @@ Ext.define('Ext.ux.Plyr',
 		if (!me.player) {
 			me.logCustom('No active player', 1);
 			return;
+		}
+
+		if (!seconds) {
+			seconds = 2;
 		}
 
 		me.stopTaskRunner();
