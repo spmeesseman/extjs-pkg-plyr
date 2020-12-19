@@ -1,7 +1,32 @@
 /**
  * @class Ext.ux.Plyr
  *
- * ExtJS Plyr by Sam Potts Wrapper
+ * ExtJS Plyr Wrapper
+ * 
+ * This ExtJs component uses the Plyr control by Sam Potts - https://github.com/sampotts/plyr.
+ * 
+ * Wraps the Plyr JavaScript control and manages multiple plyr instances in a component for an
+ * ExtJs single page application.
+ * 
+ * Example Usage:
+ * 
+ *  	items: [
+ *      {
+ * 			xtype: 'plyr',
+ *  		url: 'https://some.url.com/to/mediafile.extension,
+ *          currentTime: 0,
+ *          videoCtlListTags: '',
+ *          plyrShowSpeed: false,
+ *          plyrLog: myLogFunction,
+ *          plyrLogValue: myLogValueFunction,
+ *          plyrType: 'audio',
+ *          onPlaying: myOnPlayFunction,
+ *          onPaused: myOnPauseFunction,
+ *          onEnded: myOnEndFunction,
+ *          onReady: function() {
+ *              ...
+ *          }
+ *      }]
  * 
  * @singleton
  * 
@@ -45,18 +70,23 @@
  *     volume	✓	✓	Gets or sets the volume for the player. The setter accepts a float between 0 and 1.
  *     muted	✓	✓	Gets or sets the muted state of the player. The setter accepts a boolean.
  *     hasAudio	✓	-	Returns a boolean indicating if the current media has an audio track.
- *     speed	✓	✓	Gets or sets the speed for the player. The setter accepts a value in the options specified in your config. Generally the minimum should be 0.5.
- *     quality¹	✓	✓	Gets or sets the quality for the player. The setter accepts a value from the options specified in your config.
+ *     speed	✓	✓	Gets or sets the speed for the player. The setter accepts a value in the options 
+ *                       specified in your config. Generally the minimum should be 0.5.
+ *     quality¹	✓	✓	Gets or sets the quality for the player. The setter accepts a value from the options
+ *                       specified in your config.
  *     loop	    ✓	✓	Gets or sets the current loop state of the player. The setter accepts a boolean.
- *     source	✓	✓	Gets or sets the current source for the player. The setter accepts an object. See source setter below for examples.
- *     poster	✓	✓	Gets or sets the current poster image for the player. The setter accepts a string; the URL for the updated poster image.
+ *     source	✓	✓	Gets or sets the current source for the player. The setter accepts an object. See source
+ *                       setter below for examples.
+ *     poster	✓	✓	Gets or sets the current poster image for the player. The setter accepts a string; the URL
+ *                       for the updated poster image.
  *     autoplay	✓	✓	Gets or sets the autoplay state of the player. The setter accepts a boolean.
  *     currentTrack	✓	✓	Gets or sets the caption track by index. -1 means the track is missing or captions is not active
- *     language	✓	✓	Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for 
- *                       the languages is dependent on the captions you include. If your captions don't have any language data, or if you have multiple 
+ *     language	✓	✓	Gets or sets the preferred captions language for the player. The setter accepts an
+ *                       ISO two-letter language code. Support for the languages is dependent on the captions you include.
+ *                       If your captions don't have any language data, or if you have multiple 
  *                       tracks with the same language, you may want to use currentTrack instead.
- *     pip	    ✓	✓	Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This currently only supported on Safari
- *                       10+ (on MacOS Sierra+ and iOS 10+) and Chrome 70+.
+ *     pip	    ✓	✓	Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This
+ *                       currently only supported on Safari 10+ (on MacOS Sierra+ and iOS 10+) and Chrome 70+.
  *     ratio	✓	✓	Gets or sets the video aspect ratio. The setter accepts a string in the same format as the ratio option.
  *     download	✓	✓	Gets or sets the URL for the download button. The setter accepts a string containing a valid absolute URL.
  *     fullscreen.active    ✓	-	Returns a boolean indicating if the current player is in fullscreen mode.
@@ -98,7 +128,7 @@
  *    	speed:    { selected: 1, options: [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2] }
  *    };
  *
- *    r controls = [
+ *    controls = [
  *    play-large', // The large play button in the center
  *    restart', // Restart playback
  *    rewind', // Rewind by the seek time (default 10 seconds)
@@ -121,39 +151,50 @@
  *    Available Standard Media Events
  *   
  *    Event Type       Description
- *    progress	        Sent periodically to inform interested parties of progress downloading the media. Information about the current amount of the media that has been downloaded is available in the media element's buffered attribute.
- *    playing	        Sent when the media begins to play (either for the first time, after having been paused, or after ending and then restarting).
- *    play	            Sent when playback of the media starts after having been paused; that is, when playback is resumed after a prior pause event.
- *    pause	        Sent when playback is paused.
+ *    progress	        Sent periodically to inform interested parties of progress downloading the media.
+ *                      Information about the current amount of the media that has been downloaded is available
+ *                      in the media element's buffered attribute.
+ *    playing	        Sent when the media begins to play (either for the first time, after having been paused,
+ *                      or after ending and then restarting).
+ *    play	            Sent when playback of the media starts after having been paused; that is, when playback
+ *                      is resumed after a prior pause event.
+ *    pause	            Sent when playback is paused.
  *    timeupdate	    The time indicated by the element's currentTime attribute has changed.
  *    volumechange	    Sent when the audio volume changes (both when the volume is set and when the muted state is changed).
  *    seeking	        Sent when a seek operation begins.
  *    seeked	        Sent when a seek operation completes.
  *    ratechange	    Sent when the playback speed changes.
- *    ended	        Sent when playback completes. Note: This does not fire if autoplay is true.
+ *    ended	            Sent when playback completes. Note: This does not fire if autoplay is true.
  *    enterfullscreen	Sent when the player enters fullscreen mode (either the proper fullscreen or full-window fallback for older browsers).
  *    exitfullscreen	Sent when the player exits fullscreen mode.
  *    captionsenabled	Sent when captions are enabled.
  *    captionsdisabled	Sent when captions are disabled.
  *    languagechange	Sent when the caption language is changed.
  *    controlshidden	Sent when the controls are hidden.
- *    controlsshown	Sent when the controls are shown.
- *    ready	        Triggered when the instance is ready for API calls.
+ *    controlsshown	    Sent when the controls are shown.
+ *    ready	            Triggered when the instance is ready for API calls.
  *   
  *    Available HTML5 Only Events
  *   
  *    Event Type	    Description
- *    loadstart	    Sent when loading of the media begins.
+ *    loadstart	        Sent when loading of the media begins.
  *    loadeddata	    The first frame of the media has finished loading.
- *    loadedmetadata	The media's metadata has finished loading; all attributes now contain as much useful information as they're going to.
- *    qualitychange	The quality of playback has changed.
- *    canplay	        Sent when enough data is available that the media can be played, at least for a couple of frames. This corresponds to the HAVE_ENOUGH_DATA readyState.
- *    canplaythrough	Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be played without interruption, assuming the download rate remains at least at the current level. Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox. Other browsers might not fire this event.
+ *    loadedmetadata	The media's metadata has finished loading; all attributes now contain as much useful information
+ *                      as they're going to.
+ *    qualitychange	    The quality of playback has changed.
+ *    canplay	        Sent when enough data is available that the media can be played, at least for a couple
+ *                      of frames. This corresponds to the HAVE_ENOUGH_DATA readyState.
+ *    canplaythrough	Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be
+ *                      played without interruption, assuming the download rate remains at least at the current level.
+ *                      Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox.
+ *                      Other browsers might not fire this event.
  *    stalled	        Sent when the user agent is trying to fetch media data, but data is unexpectedly not forthcoming.
- *    waiting	        Sent when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek).
- *    emptied   	    The media has become empty; for example, this event is sent if the media has already been loaded (or partially loaded), and the load() method is called to reload it.
- *    cuechange	    Sent when a TextTrack has changed the currently displaying cues.
- *    error	        Sent when an error occurs. The element's error attribute contains more information.
+ *    waiting	        Sent when the requested operation (such as playback) is delayed pending the completion of another
+ *                      operation (such as a seek).
+ *    emptied   	    The media has become empty; for example, this event is sent if the media has already been loaded
+ *                      (or partially loaded), and the load() method is called to reload it.
+ *    cuechange	        Sent when a TextTrack has changed the currently displaying cues.
+ *    error	            Sent when an error occurs. The element's error attribute contains more information.
  */
 Ext.define('Ext.ux.Plyr', 
 {
@@ -161,8 +202,6 @@ Ext.define('Ext.ux.Plyr',
 	xtype: 'plyr',
 	
     reference: 'player',
-    autoHeight: true,
-	border:false,
 	layout: 'fit',
     style: 
     {
@@ -435,15 +474,7 @@ Ext.define('Ext.ux.Plyr',
 		me.logCustom('   Update source url', 1);
 		me.logCustom('      URL: ' + v ? v : '', 1);
 
-		me.player.source = 
-		{
-			type: me.getPlyrType(),
-			sources: [
-			{
-				src: v ? v : ''//,
-				//type: 'audio/mp3',
-			}]
-		};
+		me.setSource(v);
 
 		return v;
 	},
@@ -464,28 +495,6 @@ Ext.define('Ext.ux.Plyr',
 
 		return v;
 	},
-
-
-	//bind:
-    //{
-    //    html: !me.plyrHTML5 ? 
-    //    //
-    //    // Non-IE
-    //    //
-    //    '<{player.plyrType} id="player_{player.idRoot}" ' +
-	//	    'controls controlsList="{player.audioCtlListTags}" style="width:100%"> ' +
-	//	    'This browser does not support HTML 5.' +
-	//	'</{player.plyrType}>' : 
-    //    //
-    //    // IE does not support HTML5 Audio Player
-    //    //
-    //    '<object id="player_{player.idRoot}" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '+
-    //        'codebase="http://www.apple.com/qtactivex/qtplugin.cab" width="100%" height="50">' +
-    //        '<param name="src" value="{player.url}">' +
-    //        '<param name="autoplay" value="false">' +
-    //        '<embed type="audio/x-wav" src="{player.url}" autoplay="false" autostart="false" width="100%" height="50">' +
-    //    '</object>'
-	//},
 
 	ffwd: function(seconds)
 	{
@@ -839,48 +848,7 @@ Ext.define('Ext.ux.Plyr',
 		if (me.getUrl())
 		{
 			me.logValueCustom('   Set url', me.getUrl(), 1);
-			
-			
-			if (me.getPlyrType() === 'audio')
-			{
-				me.player.source = {
-					type: me.getPlyrType(),
-					sources: [{
-						src: me.getUrl()//,
-						//type: 'audio/mp3',
-					}]
-				};
-			}
-			if (me.getPlyrType() === 'video')
-			{
-				me.player.source = {
-					type: me.getPlyrType(),
-					sources: [{
-						src: me.getUrl()//,
-						//type: 'video/mp4',
-					}]
-				};
-			}
-			else  if (me.getPlyrType() === 'youtube')
-			{
-				me.player.source = {
-					type: 'video',
-					sources: [{
-						src: me.getUrl(),
-						provider: 'youtube',
-					}]
-				};
-			}
-			else  if (me.getPlyrType() === 'vimeo')
-			{
-				me.player.source = {
-					type: 'video',
-					sources: [{
-						src: me.getUrl(),
-						provider: 'vimeo',
-					}]
-				};
-			}
+			me.setSource();
 		}
 
 		me.player.on('ready', function(e)    { me.onReadyInternal(e); });
@@ -1113,6 +1081,52 @@ Ext.define('Ext.ux.Plyr',
 		me.logValueCustom('   ID', me.playerId, 2);
 		if (Ext.isFunction(me.onWaiting)) {
 			me.onWaiting();
+		}
+	},
+
+
+	setSource: function(src)
+	{
+		var me = this;
+		if (me.getPlyrType() === 'audio')
+		{
+			me.player.source = {
+				type: me.getPlyrType(),
+				sources: [{
+					src: src || me.getUrl()//,
+					//type: 'audio/mp3',
+				}]
+			};
+		}
+		if (me.getPlyrType() === 'video')
+		{
+			me.player.source = {
+				type: me.getPlyrType(),
+				sources: [{
+					src: src || me.getUrl()//,
+					//type: 'video/mp4',
+				}]
+			};
+		}
+		else  if (me.getPlyrType() === 'youtube')
+		{
+			me.player.source = {
+				type: 'video',
+				sources: [{
+					src: src || me.getUrl(),
+					provider: 'youtube',
+				}]
+			};
+		}
+		else  if (me.getPlyrType() === 'vimeo')
+		{
+			me.player.source = {
+				type: 'video',
+				sources: [{
+					src: src || me.getUrl(),
+					provider: 'vimeo',
+				}]
+			};
 		}
 	}
 
