@@ -1,7 +1,9 @@
+
 @if variable-exists(background-color) 
 {
     $custom-plyr-color: dynamic(if(lightness($background-color) < 50, $font-color, $base-color));
     $custom-plyr-background-color: dynamic($background-color);
+    $custom-plyr-background-color-hover: dynamic(mix(#FFF, $custom-plyr-color, 25%));
 }
 @else
 {
@@ -15,6 +17,35 @@
     {
         $custom-plyr-color: dynamic($base-color);
     }
+    $custom-plyr-background-color-hover: dynamic(mix(#FFF, $custom-plyr-color, 25%));
+}
+
+.plyr--audio .plyr__control {
+    &.plyr__tab-focus,
+    &:hover,
+    &[aria-expanded='true'] {
+      background: $custom-plyr-background-color-hover;
+      color: $custom-plyr-background-color;
+    }
+}
+
+.plyr--video .plyr__control {
+    &.plyr__tab-focus,
+    &:hover,
+    &[aria-expanded='true'] {
+        background: $custom-plyr-background-color-hover;
+        color: $custom-plyr-background-color;
+    }
+}
+
+.plyr--audio .plyr__progress__buffer {
+    color: var(--plyr-audio-progress-buffered-background,rgba(193,200,209,.9));
+    background-color: var(--plyr-audio-progress-buffered-background,rgba(193,200,209,.4));
+}
+
+.plyr--video .plyr__progress__buffer { // plyr v3.6 sets --plyr-video-progress-buffered-background white
+    color: var(--plyr-audio-progress-buffered-background,rgba(193,200,209,.9));
+    background-color: var(--plyr-audio-progress-buffered-background,rgba(193,200,209,.4));
 }
 
 .plyr--audio .plyr__controls {
