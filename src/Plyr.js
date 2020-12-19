@@ -538,6 +538,14 @@ Ext.define('Ext.ux.Plyr',
 
 		me.stopTaskRunner();
 
+		//
+		// Plyr emits play event for every call to forward(), turn this off
+		// while seeking is active
+		//
+		//if (Ext.isFunction(me.getOnPlaying())) {
+		//	me.player.off('playing', me.getOnPlaying());
+		//}
+
 		me.player.forward(seconds);
 
 		//
@@ -575,6 +583,17 @@ Ext.define('Ext.ux.Plyr',
 		}
 
 		me.stopTaskRunner();
+
+		//if (Ext.isFunction(me.getOnPlaying())) {
+		//	me.player.on('playing', me.getOnPlaying());
+		//	me.getOnPlaying()({ // send an event
+		//		details: {
+		//			plyr: me.player
+		//		},
+		//		type: 'playing',
+		//		timestamp: 0 // TODO
+		//	});
+		//}
 	},
 
 
@@ -681,6 +700,14 @@ Ext.define('Ext.ux.Plyr',
 		}
 
 		me.stopTaskRunner();
+
+		//
+		// Plyr emits play event for every call to forward(), turn this off
+		// while seeking is active
+		//
+		//if (Ext.isFunction(me.getOnPlaying())) {
+		//	me.player.off('playing', me.getOnPlaying());
+		//}
 
 		if (me.plyrHTML5 !== false) {
 			me.player.rewind(seconds);
