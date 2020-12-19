@@ -496,6 +496,7 @@ Ext.define('Ext.ux.Plyr',
 		return v;
 	},
 
+
 	ffwd: function(seconds)
 	{
 		var me = this;
@@ -858,8 +859,8 @@ Ext.define('Ext.ux.Plyr',
 			// count up instead of down
 			invertTime: false,
 			// show duration
-			controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 
-					   'pip', 'airplay', 'fullscreen', 'duration', 'restart', 'rewind', 'fast-forward' ]
+			controls: ['restart', 'rewind', 'play-large', 'play', 'fast-forward', 'progress', 'current-time',
+			           'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'  ]
 		};
 
 		if (me.getPlyrShowSpeed() === false) {
