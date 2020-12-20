@@ -641,3 +641,56 @@ December 17th, 2020
     
     Update plyr component to v3.6.3.
 
+
+Version 1.11.0
+December 19th, 2020
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Feature
+    
+    Add new config properties to register callback for player events:
+    
+        onSeekStarted
+        onSeekEnded
+
+2.  Bug Fix
+    
+    Calling the setUrl() function for a plyr instance configured for custom
+    video results in the following error:
+    
+        media.player.load is not a function
+
+3.  Bug Fix
+    
+    The rwdStart() and ffwdStart() function seeks at 30 seconds blocks if the
+    seek time is not specified in the function parameter.  This should behave
+    the same as rwd() and ffwd() when not specifying this parameter, seeking at
+    2 second blocks by default.
+
+4.  Bug Fix
+    
+    Upgrading to 'plyr' component version 3.6.3 has re-ordered the player
+    controls.
+
+5.  Visual
+    
+    Button hover highlight color now matches theme color.
+
