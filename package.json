@@ -62,7 +62,8 @@
         ],
         "css": [
             {
-                "path": "plyr/plyr.css"
+                "path": "plyr/plyr.css",
+                "remote": true
             }
         ],
         "production": {
