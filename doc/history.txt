@@ -694,3 +694,31 @@ December 19th, 2020
     
     Button hover highlight color now matches theme color.
 
+
+Version 1.11.1
+April 13th, 2021
+-------------------------------------------------------------------------------
+********************************************************************************
+***                                                                            *
+*** Verify that the following requirements have been satisfied:                *
+***                                                                            *
+*** Requirements:                                                              *
+*** -------------                                                              *
+***                                                                            *
+***    1.  Operating System            : Windows 7+                            * 
+***                                                                            *
+***    2.  CPU                         : 1.0+ GHz                              *
+***                                                                            *
+***    3.  RAM                         : 128 MB                                *
+***                                                                            *
+***    4.  ExtJS Core                  : 6.7+                                  *
+***                                                                            *
+***    5.  NodeJS                      : 8+                                    *
+***                                                                            *
+********************************************************************************
+
+1.  Bug Fix
+    
+    In the application build output's plyr.css stylesheet, the player width
+    calculations are incorrect in Chrome Version 89+.
+
